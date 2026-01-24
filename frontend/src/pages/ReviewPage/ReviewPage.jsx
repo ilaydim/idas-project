@@ -1,93 +1,110 @@
-import React, { useState } from 'react';
-import './ReviewPage.css';
+import React, { useState } from "react";
+import "./ReviewPage.css";
 
 const ReviewPage = () => {
-  const [file, setFile] = useState(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [report, setReport] = useState(null);
+  const [isAnalyzed, setIsAnalyzed] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState(null);
 
-  const handleFileUpload = (e) => {
-    const uploadedFile = e.target.files[0];
-    if (uploadedFile && uploadedFile.name.endsWith('.docx')) { // .docx sınırı
-      setFile(uploadedFile);
-      startAnalysis();
-    } else {
-      alert("Lütfen sadece .docx formatında bir dosya yükleyin.");
-    }
-  };
-
-  const startAnalysis = () => {
-    setIsAnalyzing(true);
-    // Gerçek uygulamada Python Backend/Agent burayı tetikleyecek
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setReport({
-        totalRequirements: 12,
-        frCount: 8,
-        nfrCount: 4,
-        issues: [
-          { id: 1, type: 'Belirsizlik', text: 'Sistem hızlı olmalıdır.', suggestion: 'Hızın 2 saniye altında olması gerektiğini belirtin.' },
-          { id: 2, type: 'Test Edilemez', text: 'Arayüz çok güzel olmalı.', suggestion: 'Tasarım standartlarına atıfta bulunun.' }
-        ]
-      });
-    }, 3000); // 3 saniyelik simülasyon
+  // Simüle edilmiş analiz verileri
+  const analysisData = {
+    stats: { total: 15, fr: 10, nfr: 5, issues: 4 },
+    requirements: [
+      {
+        id: "REQ-001",
+        type: "FR",
+        text: "Sistem, kullanıcı giriş yaptıktan sonra verileri hızlıca getirmelidir.",
+        status: "warning",
+        issue: "Belirsizlik: 'Hızlıca' ifadesi ölçülebilir bir değer değildir.",
+        suggestion: "2 saniye altında olacak şekilde güncelleyin."
+      },
+      {
+        id: "REQ-002",
+        type: "NFR",
+        text: "Veritabanı bağlantısı TLS 1.3 protokolü ile şifrelenmelidir.",
+        status: "success",
+        issue: null
+      },
+      {
+        id: "REQ-003",
+        type: "FR",
+        text: "Arayüz tasarımı kullanıcıyı mutlu edecek düzeyde olmalıdır.",
+        status: "error",
+        issue: "Test Edilemez: Duygusal ifadeler test kriteri olamaz.",
+        suggestion: "Tasarım rehberindeki (UI Guide v2) standartlara atıfta bulunun."
+      }
+    ]
   };
 
   return (
-    <div className="reviewWrapper">
-      <h1 className="reviewTitle">İnceleme Modu</h1>
-      
-      {!report ? (
-        <div className="uploadContainer">
-          <div className={`dropZone ${isAnalyzing ? 'analyzing' : ''}`}>
-            {isAnalyzing ? (
-              <div className="loader">
-                <div className="spinner"></div>
-                <p>Gereksinimler Analiz Ediliyor...</p>
-              </div>
-            ) : (
-              <>
-                <div className="uploadIcon">📄</div>
-                <p className="uploadText">SRS dökümanınızı sürükleyin veya seçin</p>
-                <span className="uploadHint">Sadece .docx formatı desteklenir</span>
-                <input type="file" onChange={handleFileUpload} className="fileInput" accept=".docx" />
-              </>
-            )}
-          </div>
+    <div className="reviewContainer">
+      {/* Üst Bar */}
+      <header className="reviewHeader">
+        <button className="backBtn" onClick={() => window.history.back()}>← Geri</button>
+        <h2 className="headerTitle">İnceleme Raporu</h2>
+        <div className="headerActions">
+          <button className="actionBtn secondary">Raporu İndir (.pdf)</button>
+          <button className="actionBtn primary">Dökümanı Kaydet</button>
         </div>
-      ) : (
-        <div className="reportContainer">
-          {/* Görsel Rapor Paneli */}
-          <div className="reportSummary">
-            <div className="statCard">
-              <span>Toplam Gereksinim</span>
-              <strong>{report.totalRequirements}</strong>
-            </div>
-            <div className="statCard fr">
-              <span>Fonksiyonel (FR)</span>
-              <strong>{report.frCount}</strong>
-            </div>
-            <div className="statCard nfr">
-              <span>Fonksiyonel Olmayan (NFR)</span>
-              <strong>{report.nfrCount}</strong>
+      </header>
+
+      <div className="reviewLayout">
+        {/* SOL: Analiz Özet Paneli */}
+        <aside className="reviewSummary">
+          <div className="summaryCard">
+            <h3>Analiz Özeti</h3>
+            <div className="statGrid">
+              <div className="statItem"><span>Toplam</span><strong>{analysisData.stats.total}</strong></div>
+              <div className="statItem fr"><span>FR</span><strong>{analysisData.stats.total}</strong></div>
+              <div className="statItem nfr"><span>NFR</span><strong>{analysisData.stats.nfr}</strong></div>
+              <div className="statItem error"><span>Kusur</span><strong>{analysisData.stats.issues}</strong></div>
             </div>
           </div>
 
-          <div className="issuesList">
-            <h3 className="listTitle">Tespit Edilen Kalite Kusurları</h3>
-            {report.issues.map(issue => (
-              <div key={issue.id} className="issueItem">
-                <div className="issueBadge">{issue.type}</div>
-                <div className="issueContent">
-                  <p className="originalText">"{issue.text}"</p>
-                  <p className="suggestionText">💡 Öneri: {issue.suggestion}</p>
-                </div>
-              </div>
-            ))}
-            <button onClick={() => setReport(null)} className="reUploadBtn">Yeni Dosya Yükle</button>
+          <div className="filterBox">
+            <h4>Filtrele</h4>
+            <div className="filterOption"><input type="checkbox" defaultChecked /> Sadece Kusurluları Göster</div>
+            <div className="filterOption"><input type="checkbox" defaultChecked /> FR / NFR Ayrımı Yap</div>
           </div>
-        </div>
-      )}
+        </aside>
+
+        {/* ORTA: Gereksinim Listesi */}
+        <main className="resultsArea">
+          {analysisData.requirements.map((req) => (
+            <div 
+              key={req.id} 
+              className={`reqCard ${req.status} ${selectedIssue === req.id ? 'selected' : ''}`}
+              onClick={() => setSelectedIssue(req.id)}
+            >
+              <div className="reqMeta">
+                <span className="reqId">{req.id}</span>
+                <span className={`reqBadge ${req.type.toLowerCase()}`}>{req.type}</span>
+              </div>
+              <p className="reqText">{req.text}</p>
+              {req.issue && (
+                <div className="issueAlert">
+                  <strong>⚠️ Tespit Edilen Kusur:</strong> {req.issue}
+                </div>
+              )}
+            </div>
+          ))}
+        </main>
+
+        {/* SAĞ: Öneri Paneli */}
+        <aside className="suggestionPanel">
+          <h3>İyileştirme Önerisi</h3>
+          {selectedIssue ? (
+            <div className="suggestionContent">
+              <p className="suggestionIntro">Seçili gereksinim için AI önerisi:</p>
+              <div className="suggestionBox">
+                {analysisData.requirements.find(r => r.id === selectedIssue)?.suggestion || "Bu gereksinim standartlara uygundur."}
+              </div>
+              <button className="applySuggestionBtn">Öneriyi Uygula</button>
+            </div>
+          ) : (
+            <p className="noSelection">Detayları görmek için bir gereksinim seçin.</p>
+          )}
+        </aside>
+      </div>
     </div>
   );
 };

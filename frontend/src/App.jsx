@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Yeni klasör yapısına göre import yolları 
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AuthoringPage from "./pages/AuthoringPage/AuthoringPage";
@@ -12,9 +13,13 @@ function App() {
     <Router>
       <div className="min-h-screen bg-slate-50">
         <Routes>
+          
           {/* Giriş ekranı - Kimlik doğrulama gereksinimi için [cite: 130, 209] */}
           <Route path="/" element={<LoginPage />} />
           
+          {/* Profile ekranı */}
+          <Route path="/profile" element={<ProfilePage />} />
+
           {/* Dashboard - Mod seçimi için [cite: 77, 142] */}
           <Route path="/dashboard" element={<Dashboard />} />
           

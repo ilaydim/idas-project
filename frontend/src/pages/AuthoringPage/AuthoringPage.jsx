@@ -1,85 +1,232 @@
-import React, { useState } from 'react';
-import { SRS_TEMPLATES } from '../../utils/templates';
+import React, { useState, useEffect } from "react";
+import { SRS_TEMPLATES } from "../../utils/templates";
+import DownloadMenu from "../../components/DownloadMenu/DownloadMenu";
+import "./AuthoringPage.css";
 
 const AuthoringPage = () => {
-  const [selectedTemplate, setSelectedTemplate] = useState('HAVELSAN'); // [cite: 23, 318]
-  const [activeSection, setActiveSection] = useState(SRS_TEMPLATES.HAVELSAN.sections[0].id);
+  // --- DURUM YÖNETİMİ ---
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [isTemplateLocked, setIsTemplateLocked] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [content, setContent] = useState({});
+  const [progress, setProgress] = useState(0);
+  const [chatInput, setChatInput] = useState("");
+  const [messages] = useState([
+    { role: 'ai', text: 'Hazırım. Döküman yapısını tamamladıktan sonra indirebilirsin.' }
+  ]);
+  const [revisionHistory, setRevisionHistory] = useState([
+    { id: 1, name: "İlayda Dim", date: "24.01.2026", reason: "Initial Setup", version: "0.1" }
+  ]);
+
+  // --- İLERLEME HESAPLAMA ---
+  useEffect(() => {
+    if (isTemplateLocked && selectedTemplate) {
+      const sections = SRS_TEMPLATES[selectedTemplate].sections;
+      const required = sections.filter(s => s.required);
+      const filled = required.filter(s => content[s.id] && content[s.id].trim().length > 0).length;
+      setProgress(Math.round((filled / required.length) * 100));
+    }
+  }, [content, selectedTemplate, isTemplateLocked]);
+
+  // --- FONKSİYONLAR ---
+  const handleTemplateSelect = (tempKey) => {
+    setSelectedTemplate(tempKey);
+    setIsTemplateLocked(true);
+    setActiveSection("toc"); // İlk açılışta İçindekiler'i göster
+  };
+
+  const handleGoBackToSelection = () => {
+    // Kullanıcı geri dönmek isterse her şeyi sıfırla
+    setIsTemplateLocked(false);
+    setSelectedTemplate(null);
+    setContent({});
+    setProgress(0);
+  };
+
+  const addRevisionRow = () => {
+    setRevisionHistory([...revisionHistory, { id: Date.now(), name: "", date: "", reason: "", version: "" }]);
+  };
+
+  const updateRevision = (id, field, value) => {
+    setRevisionHistory(revisionHistory.map(r => r.id === id ? { ...r, [field]: value } : r));
+  };
 
   return (
-    <div className="h-screen flex flex-col bg-white">
-      {/* Navbar: Mod Değiştirici ve Kaydetme */}
-      <header className="h-16 border-b border-slate-100 px-6 flex items-center justify-between bg-white shrink-0">
-        <div className="flex items-center gap-4">
-          <span className="font-bold text-blue-600">IDAS Authoring</span>
-          <select 
-            className="text-sm border-none bg-slate-50 rounded-lg px-3 py-1.5 focus:ring-0 cursor-pointer"
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-          >
-            <option value="HAVELSAN text-xs">HAVELSAN Template [cite: 38]</option>
-            <option value="IEEE">IEEE 830 Standard</option>
-          </select>
+    <div className="auth-master-container">
+      {/* 1. ÜST NAVBAR */}
+      <header className="auth-modern-nav">
+        <div className="nav-group-left">
+          <button className="nav-back-pill" onClick={() => window.history.back()}>← Dashboard</button>
+          <div className="nav-breadcrumb">
+            <span 
+              className={`breadcrumb-clickable ${isTemplateLocked ? 'active' : ''}`} 
+              onClick={isTemplateLocked ? handleGoBackToSelection : null}
+            >
+              Authoring Mode
+            </span>
+            {isTemplateLocked && (
+              <>
+                <span className="path-divider">/</span>
+                <span className="active-template-name">{SRS_TEMPLATES[selectedTemplate].title}</span>
+              </>
+            )}
+          </div>
         </div>
-        <div className="flex gap-3">
-          <button className="text-sm font-medium text-slate-500 hover:text-slate-800">Taslak Olarak Kaydet</button>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-blue-700 transition-all">
-            Dışa Aktar (.docx) [cite: 95]
-          </button>
+
+        <div className="nav-group-right">
+          {isTemplateLocked && (
+            <>
+              {/* İNDİRME DROPDOWN BİLEŞENİ */}
+              <DownloadMenu 
+                selectedTemplate={selectedTemplate} 
+                content={content} 
+                revisionHistory={revisionHistory} 
+              />
+              <div className="circular-progress-box">
+                <svg viewBox="0 0 36 36" className="circular-chart">
+                  <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path className="circle" strokeDasharray={`${progress}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <span className="prog-number">%{progress}</span>
+              </div>
+            </>
+          )}
+          <button className="nav-save-btn" disabled={!isTemplateLocked}>Taslağı Kaydet</button>
+          <div className="nav-avatar">İD</div>
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* SOL: Bölüm Navigasyonu */}
-        <aside className="w-64 border-right border-slate-100 bg-slate-50/50 overflow-y-auto p-4">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Bölümler [cite: 184]</p>
-          <nav className="space-y-1">
-            {SRS_TEMPLATES[selectedTemplate].sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm transition-all ${
-                  activeSection === section.id 
-                  ? 'bg-white shadow-sm text-blue-600 font-bold border border-slate-100' 
-                  : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {section.title}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* ORTA: Metin Editörü */}
-        <main className="flex-1 bg-white overflow-y-auto flex justify-center p-8">
-          <div className="w-full max-w-3xl">
-            <textarea
-              className="w-full h-full min-h-[500px] text-lg text-slate-800 placeholder-slate-300 border-none focus:ring-0 leading-relaxed resize-none"
-              placeholder="Gereksinimlerinizi buraya yazmaya başlayın..."
-            />
-          </div>
-        </main>
-
-        {/* SAĞ: AI Destek Paneli */}
-        <aside className="w-80 border-l border-slate-100 bg-white p-5 overflow-y-auto">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="h-2 w-2 bg-purple-500 rounded-full animate-pulse"></div>
-            <h3 className="font-bold text-slate-800 text-sm italic">AI Asistanı Önerileri [cite: 90, 196]</h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="p-4 bg-purple-50 rounded-2xl border border-purple-100 group">
-              <p className="text-xs font-bold text-purple-700 mb-2">✨ Taslak Gereksinim Önerisi [cite: 186]</p>
-              <p className="text-sm text-slate-700 italic">"Sistem, kimlik doğrulaması yapılmış kullanıcıların profil bilgilerini 2 saniye içinde güncelleyebilmelidir."</p>
-              <button className="mt-3 text-[10px] font-bold text-purple-600 hover:underline uppercase tracking-wider">Metne Ekle</button>
-            </div>
-
-            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100">
-              <p className="text-xs font-bold text-amber-700 mb-2">⚠️ Terminoloji Uyarısı [cite: 185]</p>
-              <p className="text-sm text-slate-700 italic">'Veritabanı' yerine HAVELSAN standardı olan 'VTBS' terimini kullanmayı düşünün[cite: 242].</p>
+      {/* 2. ANA İÇERİK ALANI */}
+      {!isTemplateLocked ? (
+        /* ŞABLON SEÇİM EKRANI */
+        <div className="template-selection-view">
+          <div className="selection-card">
+            <h1 className="selection-title">Yeni Döküman Başlat</h1>
+            <p className="selection-subtitle">Lütfen standart yapıyı seçin. İçindekiler ve Revizyon Geçmişi otomatik oluşturulacaktır.</p>
+            <div className="template-grid">
+              {Object.keys(SRS_TEMPLATES).map(key => (
+                <div key={key} className="template-card-box" onClick={() => handleTemplateSelect(key)}>
+                  <div className="t-card-icon">{key.includes('IEEE') ? '🌐' : '🏢'}</div>
+                  <h3>{SRS_TEMPLATES[key].title}</h3>
+                  <p>{SRS_TEMPLATES[key].description}</p>
+                  <div className="select-badge">Seç ve Başla</div>
+                </div>
+              ))}
             </div>
           </div>
-        </aside>
-      </div>
+        </div>
+      ) : (
+        /* EDİTÖR GÖRÜNÜMÜ */
+        <div className="auth-main-layout">
+          {/* SOL: Navigasyon */}
+          <aside className="auth-sidebar-nav">
+            <div className="panel-tag">DÖKÜMAN YAPISI</div>
+            <div className="sidebar-scroller">
+              <div className={`section-row ${activeSection === "toc" ? "active" : ""}`} onClick={() => setActiveSection("toc")}>
+                <div className="indicator-dot"></div>
+                <span className="section-title-text">Table of Contents</span>
+              </div>
+              {SRS_TEMPLATES[selectedTemplate].sections.map(s => (
+                <div 
+                  key={s.id} 
+                  className={`section-row ${activeSection === s.id ? "active" : ""} ${content[s.id]?.length > 0 ? "completed" : ""}`} 
+                  onClick={() => setActiveSection(s.id)}
+                >
+                  <div className="indicator-dot"></div>
+                  <span className="section-title-text">{s.title}</span>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          {/* ORTA: Editör veya TOC Sayfası */}
+          <main className="auth-editor-core">
+            <div className="editor-top-info">
+               <h2>{activeSection === "toc" ? "Table of Contents & History" : SRS_TEMPLATES[selectedTemplate].sections.find(s => s.id === activeSection)?.title}</h2>
+               <p className="hint-text">
+                 {activeSection === "toc" ? "Döküman hiyerarşisini takip edin." : (SRS_TEMPLATES[selectedTemplate].sections.find(s => s.id === activeSection)?.hint || "Yazmaya başlayın...")}
+               </p>
+            </div>
+
+            <div className="textarea-wrapper scrollable-view">
+              {activeSection === "toc" ? (
+                /* İÇİNDEKİLER VE REVİZYON SAYFASI */
+                <div className="toc-dynamic-page">
+                  <div className="toc-list">
+                    {SRS_TEMPLATES[selectedTemplate].sections.map(s => (
+                      <div key={s.id} className="toc-entry" onClick={() => setActiveSection(s.id)}>
+                        <span className="toc-entry-title">{s.title}</span>
+                        <div className="toc-entry-dots"></div>
+                        <span className="toc-entry-page">GİT</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="revision-history-box">
+                    <div className="rev-header-row">
+                      <h3>Revision History</h3>
+                      <button className="add-rev-btn" onClick={addRevisionRow}>+ Yeni Satır</button>
+                    </div>
+                    <table className="revision-table">
+                      <thead>
+                        <tr><th>Name</th><th>Date</th><th>Reason</th><th>Version</th></tr>
+                      </thead>
+                      <tbody>
+                        {revisionHistory.map(row => (
+                          <tr key={row.id}>
+                            <td><input value={row.name} onChange={e => updateRevision(row.id, "name", e.target.value)} placeholder="İsim..." /></td>
+                            <td><input value={row.date} onChange={e => updateRevision(row.id, "date", e.target.value)} placeholder="Tarih..." /></td>
+                            <td><input value={row.reason} onChange={e => updateRevision(row.id, "reason", e.target.value)} placeholder="Neden..." /></td>
+                            <td><input value={row.version} onChange={e => updateRevision(row.id, "version", e.target.value)} placeholder="0.1" /></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                /* METİN EDİTÖRÜ */
+                <textarea 
+                  className="main-editor-textarea" 
+                  value={content[activeSection] || ""} 
+                  onChange={e => setContent({...content, [activeSection]: e.target.value})} 
+                  placeholder="Gereksinimleri teknik bir dille buraya yazın..."
+                />
+              )}
+            </div>
+          </main>
+
+          {/* SAĞ: AI Yan Panel */}
+          <aside className="auth-ai-sidebar">
+            <div className="ai-analysis-layer">
+              <div className="panel-tag">💡 CANLI ANALİZ</div>
+              <div className="warning-scroll-area">
+                <div className="analysis-card error">
+                  <div className="card-head"><strong>Belirsizlik</strong></div>
+                  <p>"Hızlıca" kelimesi ölçülebilir değil.</p>
+                </div>
+              </div>
+            </div>
+            <div className="ai-chat-layer">
+              <div className="panel-tag">💬 AI ASİSTANI</div>
+              <div className="chat-history-area">
+                {messages.map((m, i) => (
+                  <div key={i} className={`chat-msg-bubble ${m.role}`}>{m.text}</div>
+                ))}
+              </div>
+              <div className="chat-input-bar">
+                <input 
+                  type="text" 
+                  placeholder="Yardım isteyin..." 
+                  value={chatInput} 
+                  onChange={(e) => setChatInput(e.target.value)} 
+                />
+                <button className="chat-send-btn">➤</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 };

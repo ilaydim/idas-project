@@ -5,7 +5,7 @@ import './Dashboard.css';
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Örnek döküman verisi - Gerçek uygulamada API'den gelecek [cite: 594]
+  // Örnek döküman verisi - Gerçek uygulamada API'den gelecek
   const documents = [
     { id: 1, title: 'SRS_Project_Alpha', type: 'HAVELSAN', date: '20.01.2026' },
     { id: 2, title: 'IEEE_Standard_Doc', type: 'IEEE', date: '18.01.2026' },
@@ -15,21 +15,35 @@ const Dashboard = () => {
 
   return (
     <div className="dashboardWrapper">
+      {/* Üst Bilgi Paneli: Başlık ve Profil Erişimi */}
       <header className="dashboardHeader">
         <h1 className="dashboardTitle">Dashboard</h1>
+        <div 
+          className="userProfileIcon"
+          onClick={() => navigate('/profile')}
+          title="Profilime Git"
+        >
+          İD
+        </div>
       </header>
       
-      {/* Mod Seçim Alanı */}
+      {/* Mod Seçim Alanı: Ana İş Akışları */}
       <div className="pillButtonContainer">
-        <button className="pillBtn authoring" onClick={() => navigate('/authoring')}>
-          Yazım Modu (Authoring Mode) 
+        <button 
+          className="pillBtn authoring" 
+          onClick={() => navigate('/authoring')}
+        >
+          Yazım Modu (Authoring Mode)
         </button>
-        <button className="pillBtn review" onClick={() => navigate('/review')}>
-          Düzenleme Modu (Review Mode) 
+        <button 
+          className="pillBtn review" 
+          onClick={() => navigate('/review')}
+        >
+          Düzenleme Modu (Review Mode)
         </button>
       </div>
 
-      {/* Son Dokümanlar Bölümü  */}
+      {/* Son Dokümanlar Bölümü: Kullanıcı Geçmişi */}
       <div className="contentSection">
         <h2 className="sectionTitle">Son Dokümanlar</h2>
         <div className="docGridContainer">
@@ -43,6 +57,7 @@ const Dashboard = () => {
                     <div className="line medium"></div>
                     <div className="line short"></div>
                   </div>
+                  {/* HAVELSAN veya IEEE Şablon Türü */}
                   <div className="docTypeTag">{doc.type}</div>
                 </div>
                 <div className="docInfo">
@@ -54,6 +69,11 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Alt Bilgi: Proje Künyesi */}
+      <footer className="dashboardFooter">
+        <p>IDAS: Intelligent Documentation Assistant for SRS</p>
+      </footer>
     </div>
   );
 };

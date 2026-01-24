@@ -1,0 +1,289 @@
+/* DEĞİŞKENLER VE TEMEL AYARLAR */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-nav: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.auth-master-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-main);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-main);
+}
+
+/* 1. NAVBAR STİLLERİ */
+.auth-modern-nav {
+  height: 64px;
+  background: var(--bg-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.nav-group-left, .nav-group-right { display: flex; align-items: center; gap: 16px; }
+
+.nav-back-pill {
+  background: #1e293b;
+  color: white;
+  border: 1px solid #334155;
+  padding: 6px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.nav-back-pill:hover { background: #334155; border-color: #475569; }
+
+.nav-breadcrumb { font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 8px; }
+.breadcrumb-clickable.active { cursor: pointer; color: #f8fafc; text-decoration: none; border-bottom: 1px dashed #3b82f6; padding-bottom: 2px; }
+.breadcrumb-clickable.active:hover { color: #3b82f6; }
+.active-template-name { color: #3b82f6; font-weight: 700; }
+
+.nav-save-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-save-btn:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
+.nav-save-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.nav-avatar {
+  width: 36px; height: 36px;
+  background: #3b82f6;
+  border: 2px solid #1e40af;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 12px;
+}
+
+/* 2. ŞABLON SEÇİM EKRANI */
+.template-selection-view {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  padding: 40px 0;
+}
+
+.selection-card {
+  background: white;
+  padding: 50px;
+  border-radius: 30px;
+  text-align: center;
+  max-width: 900px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+}
+
+.selection-title { font-size: 32px; font-weight: 900; color: var(--bg-nav); margin-bottom: 12px; }
+.selection-subtitle { color: var(--text-muted); margin-bottom: 40px; font-size: 16px; }
+
+.template-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+.template-card-box {
+  padding: 30px;
+  border: 2px solid #f1f5f9;
+  border-radius: 24px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.template-card-box:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  background: #eff6ff;
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1);
+}
+
+.t-card-icon { font-size: 40px; margin-bottom: 15px; }
+.template-card-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.template-card-box p { font-size: 13px; color: var(--text-muted); line-height: 1.5; min-height: 40px; }
+
+/* 3. ANA EDİTÖR LAYOUT */
+.auth-main-layout { display: flex; flex: 1; overflow: hidden; }
+
+/* SIDEBAR */
+.auth-sidebar-nav {
+  width: 280px;
+  min-width: 280px;
+  background: white;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-tag {
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--text-muted);
+  padding: 20px 20px 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-scroller { flex: 1; overflow-y: auto; padding: 10px; }
+
+.section-row {
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 4px;
+}
+
+.section-row:hover { background: #f1f5f9; }
+.section-row.active { background: #eff6ff; color: var(--primary); font-weight: 700; }
+
+.indicator-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #cbd5e1;
+  transition: var(--transition);
+}
+
+.section-row.completed .indicator-dot { background: #22c55e; box-shadow: 0 0 8px #22c55e66; }
+
+/* EDITOR CORE */
+.auth-editor-core {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-top-info { padding: 40px 50px 10px; }
+.editor-top-info h2 { font-size: 28px; font-weight: 900; color: var(--bg-nav); }
+.hint-text { color: var(--text-muted); font-size: 14px; margin-top: 6px; font-style: italic; }
+
+.textarea-wrapper { flex: 1; padding: 20px 50px 50px; display: flex; flex-direction: column; }
+.main-editor-textarea {
+  flex: 1; width: 100%; border: none; outline: none; resize: none;
+  font-size: 18px; line-height: 1.8; color: #1e293b;
+  padding: 20px; border-radius: 12px; background: #fcfdfe;
+}
+
+/* 4. AI SIDEBAR */
+.auth-ai-sidebar {
+  width: 350px;
+  min-width: 350px;
+  background: #f8fafc;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-analysis-layer { height: 45%; border-bottom: 2px solid var(--border-color); display: flex; flex-direction: column; }
+.ai-chat-layer { height: 55%; background: white; display: flex; flex-direction: column; }
+
+.warning-scroll-area, .chat-history-area { flex: 1; overflow-y: auto; padding: 16px; }
+
+.analysis-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  transition: var(--transition);
+}
+
+.analysis-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.analysis-card.error { border-left: 4px solid #ef4444; }
+.analysis-card.warning { border-left: 4px solid #f59e0b; }
+
+.chat-msg-bubble {
+  padding: 10px 14px; border-radius: 12px; font-size: 13.5px;
+  max-width: 85%; margin-bottom: 10px; line-height: 1.5;
+}
+.chat-msg-bubble.ai { background: #f1f5f9; align-self: flex-start; border-bottom-left-radius: 2px; }
+.chat-msg-bubble.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+.chat-input-bar {
+  padding: 15px; background: white; border-top: 1px solid var(--border-color);
+  display: flex; gap: 8px;
+}
+.chat-input-bar input { flex: 1; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; outline: none; font-size: 13px; }
+
+/* 5. TABLE OF CONTENTS (TOC) TASARIMI */
+.toc-dynamic-page { padding: 10px 0; animation: fadeIn 0.4s ease; }
+.toc-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+
+.toc-entry {
+  display: flex; align-items: center; cursor: pointer; padding: 8px 12px;
+  border-radius: 8px; transition: var(--transition);
+}
+.toc-entry:hover { background: #f1f5f9; }
+
+.toc-entry-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
+.toc-entry-dots { flex: 1; border-bottom: 1px dotted #cbd5e1; margin: 0 12px; transform: translateY(-4px); }
+.toc-entry-page { font-size: 11px; font-weight: 800; color: var(--primary); background: #eff6ff; padding: 4px 8px; border-radius: 6px; }
+
+/* 6. REVIZYON TABLOSU */
+.revision-history-box { margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 30px; }
+.rev-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+
+.revision-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+.revision-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
+.revision-table td { padding: 0; border-bottom: 1px solid var(--border-color); }
+.revision-table input { width: 100%; border: none; padding: 12px; background: transparent; outline: none; font-size: 14px; }
+.revision-table input:focus { background: #f0f7ff; }
+
+/* 7. İNDİRME DROPDOWN */
+.download-dropdown { position: relative; }
+.download-icon-btn {
+  background: #1e293b; color: white; border: 1px solid #334155;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; font-weight: 700; transition: var(--transition);
+}
+.download-icon-btn:hover { background: #334155; }
+
+.download-menu-list {
+  position: absolute; top: 48px; right: 0; background: white;
+  min-width: 220px; border-radius: 12px; box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color); z-index: 2000; animation: slideIn 0.2s ease-out;
+}
+.menu-item { padding: 12px 16px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
+.menu-item:hover { background: #f1f5f9; color: var(--primary); }
+
+/* ANIMASYONLAR VE SCROLLBAR */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

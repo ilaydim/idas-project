@@ -1,116 +1,52 @@
-.reviewWrapper {
-  min-height: 100vh;
-  background-color: #f8fafc;
-  background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
-  padding: 4rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.reviewContainer { height: 100vh; display: flex; flex-direction: column; background: #f1f5f9; }
+
+/* Header */
+.reviewHeader {
+  height: 70px; background: white; border-bottom: 1px solid #e2e8f0;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+}
+.headerTitle { font-size: 1.2rem; font-weight: 800; color: #0f172a; }
+
+/* Layout */
+.reviewLayout { display: flex; flex: 1; overflow: hidden; gap: 20px; padding: 20px; }
+
+/* Sol Panel */
+.reviewSummary { width: 260px; display: flex; flex-direction: column; gap: 20px; }
+.summaryCard { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+.statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.statItem { background: #f8fafc; padding: 10px; border-radius: 8px; text-align: center; }
+.statItem.fr { color: #3b82f6; }
+.statItem.nfr { color: #a855f7; }
+.statItem.error { color: #ef4444; }
+
+/* Orta Liste */
+.resultsArea { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 10px; }
+.reqCard {
+  background: white; padding: 20px; border-radius: 12px; border-left: 6px solid #cbd5e1;
+  transition: all 0.2s; cursor: pointer;
+}
+.reqCard.warning { border-left-color: #f59e0b; }
+.reqCard.error { border-left-color: #ef4444; }
+.reqCard.success { border-left-color: #22c55e; }
+.reqCard.selected { transform: scale(1.01); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #3b82f6; }
+
+.reqMeta { display: flex; gap: 10px; margin-bottom: 10px; }
+.reqId { font-weight: 800; font-size: 0.75rem; color: #64748b; }
+.reqBadge { font-size: 0.65rem; font-weight: 900; padding: 2px 8px; border-radius: 4px; color: white; }
+.reqBadge.fr { background: #3b82f6; }
+.reqBadge.nfr { background: #a855f7; }
+
+.issueAlert {
+  margin-top: 15px; padding: 10px; background: #fff7ed;
+  border-radius: 6px; font-size: 0.85rem; color: #9a3412;
 }
 
-.reviewTitle {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 3rem;
+/* Sağ Panel */
+.suggestionPanel {
+  width: 300px; background: #ffffff; border-radius: 20px;
+  padding: 24px; box-shadow: -5px 0 15px rgba(0,0,0,0.02);
 }
-
-/* Yükleme Alanı */
-.uploadContainer {
-  width: 100%;
-  max-width: 700px;
-}
-
-.dropZone {
-  border: 3px dashed #cbd5e1;
-  border-radius: 2rem;
-  padding: 5rem;
-  text-align: center;
-  background: white;
-  transition: all 0.3s ease;
-  position: relative;
-  cursor: pointer;
-}
-
-.dropZone:hover {
-  border-color: #a855f7;
-  background: #faf5ff;
-}
-
-.fileInput {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.uploadIcon { font-size: 4rem; margin-bottom: 1rem; }
-.uploadText { font-weight: 700; color: #475569; }
-.uploadHint { font-size: 0.8rem; color: #94a3b8; }
-
-/* Rapor Alanı */
-.reportContainer {
-  width: 100%;
-  max-width: 900px;
-  animation: fadeIn 0.5s ease;
-}
-
-.reportSummary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-.statCard {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.statCard span { font-size: 0.8rem; color: #64748b; font-weight: 600; }
-.statCard strong { display: block; font-size: 2rem; color: #1e293b; }
-.statCard.fr { border-bottom: 4px solid #3b82f6; }
-.statCard.nfr { border-bottom: 4px solid #a855f7; }
-
-.issueItem {
-  background: white;
-  margin-bottom: 1rem;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  border-left: 5px solid #ef4444;
-}
-
-.issueBadge {
-  background: #fee2e2;
-  color: #b91c1c;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.originalText { font-style: italic; color: #475569; margin-bottom: 0.5rem; }
-.suggestionText { font-weight: 600; color: #1e293b; }
-
-.reUploadBtn {
-  margin-top: 2rem;
-  color: #a855f7;
-  font-weight: 700;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.suggestionBox {
+  background: #f0f9ff; padding: 15px; border-radius: 12px;
+  color: #0369a1; font-size: 0.9rem; font-style: italic; margin-top: 15px;
 }
