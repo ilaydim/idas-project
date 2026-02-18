@@ -1,8 +1,9 @@
 **GEREKLİ BİLGİ SETLERİ**
-[ ] templates.json (şablonlar)
+[ ] templates.json (şablonlar) -> IEEE 830 (Klasik), ISO/IEC/IEEE 29148 (Modern), SyRS (System Requirements Specification), Agile SRS
 [ ] glossary.json (terminoloji sözlüğü)
 [ ] rules.json (kalite kontrol, yasaklı kelimeler listesi)
 [ ] mock documents (test dökümenları - hatalı ve doğru SRS örnekleri)
+
 
 **ARAYÜZ**
 [ ] Giriş ekranı (login,sign up)
@@ -18,7 +19,7 @@
 [ ] Profile kısmında düzenlemeler 
 [ ] Authoring/Review kısımlarında kullanıcının ek belgeler yüklemesine izin vermek (glossar gibi)  
 [ ] Kullanıcı bir glossary belgesi yüklemezse, bizim elimizde olan template'i ona sunmak ve değiştirebilmesini sağlamak (authoring kısmında en sol en alta konulabilir, kullanıcı kelimeleri silebilir, ekleyebilir ya da değiştirebilir ve AI agentımız buna göre karar verir)
-[ ]
+[ ] Dil seçimi
 
 
 📋 IDAS Proje Geliştirme Yol Haritası (GEMINI'IN YAZDIĞI)

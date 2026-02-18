@@ -1,0 +1,34 @@
+{
+    "terms": [
+        {
+            "term": "Master",
+            "status": "forbidden",
+            "suggestion": "Primary/Main",
+            "reason": "Non-inclusive terminology."
+        },
+        {
+            "term": "Slave",
+            "status": "forbidden",
+            "suggestion": "Replica/Secondary",
+            "reason": "Non-inclusive terminology."
+        },
+        {
+            "term": "Whitelist",
+            "status": "deprecated",
+            "suggestion": "Allowlist",
+            "reason": "Modern terminology preference."
+        },
+        {
+            "term": "Blacklist",
+            "status": "deprecated",
+            "suggestion": "Blocklist",
+            "reason": "Modern terminology preference."
+        },
+        {
+            "term": "User",
+            "status": "accepted",
+            "suggestion": null,
+            "reason": "Standard term."
+        }
+    ]
+}

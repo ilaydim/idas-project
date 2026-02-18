@@ -1,0 +1,20 @@
+{
+    "templates": [
+        {
+            "name": "Software Requirement Specification (SRS)",
+            "sections": [
+                "1. Introduction",
+                "1.1 Purpose",
+                "1.2 Scope",
+                "2. Overall Description",
+                "2.1 Product Perspective",
+                "2.2 Product Functions",
+                "3. Specific Requirements",
+                "3.1 Functional Requirements",
+                "3.2 Non-Functional Requirements",
+                "3.2.1 Performance Requirements",
+                "3.2.2 Security Requirements"
+            ]
+        }
+    ]
+}
