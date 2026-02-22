@@ -1,0 +1,33 @@
+{
+    "sidebar": {
+        "analysis_title": "💡 LIVE ANALYSIS",
+        "chat_title": "💬 AI ASSISTANT",
+        "structure_title": "DOCUMENT STRUCTURE"
+    },
+    "navbar": {
+        "dashboard_btn": "← Dashboard",
+        "save_btn": "Save Draft",
+        "download_btn": "Download",
+        "mode_title": "Authoring Mode",
+        "selection_title": "Start New Document",
+        "selection_subtitle": "Please select a standard structure. Table of Contents and Revision History will be created automatically."
+    },
+    "editor": {
+        "toc_title": "Table of Contents & History",
+        "toc_hint": "Track your document hierarchy here.",
+        "placeholder": "Enter your requirements in technical language here..."
+    },
+    "review": {
+        "title": "Document Review & Analysis",
+        "upload_title": "Upload Your Document",
+        "upload_hint": "Select or drag & drop your .docx or .pdf file",
+        "analyzing": "Analyzing your document... This may take a moment.",
+        "summary_title": "Analysis Summary",
+        "total_label": "Total Requirements",
+        "issue_label": "Identified Issues",
+        "suggestion_title": "AI Improvement Suggestion",
+        "apply_btn": "Apply Suggestion",
+        "save_btn": "Save Document",
+        "download_btn": "Export Report"
+    }
+}

@@ -15,10 +15,12 @@ const Dashboard = () => {
 
   return (
     <div className="dashboardWrapper">
-      {/* Üst Bilgi Paneli: Başlık ve Profil Erişimi */}
       <header className="dashboardHeader">
-        <h1 className="dashboardTitle">Dashboard</h1>
-        <div 
+        <div className="welcomeSection">
+          <p className="welcomeTop">Welcome back,</p>
+          <h1 className="dashboardTitle">İlayda Dim</h1>
+        </div>
+        <div
           className="userProfileIcon"
           onClick={() => navigate('/profile')}
           title="Profilime Git"
@@ -26,26 +28,28 @@ const Dashboard = () => {
           İD
         </div>
       </header>
-      
+
       {/* Mod Seçim Alanı: Ana İş Akışları */}
       <div className="pillButtonContainer">
-        <button 
-          className="pillBtn authoring" 
+        <button
+          className="pillBtn authoring"
           onClick={() => navigate('/authoring')}
         >
-          Yazım Modu (Authoring Mode)
+          <span className="btnIcon">✍️</span>
+          Authoring Mode
         </button>
-        <button 
-          className="pillBtn review" 
+        <button
+          className="pillBtn review"
           onClick={() => navigate('/review')}
         >
-          Düzenleme Modu (Review Mode)
+          <span className="btnIcon">🔍</span>
+          Review Mode
         </button>
       </div>
 
       {/* Son Dokümanlar Bölümü: Kullanıcı Geçmişi */}
       <div className="contentSection">
-        <h2 className="sectionTitle">Son Dokümanlar</h2>
+        <h2 className="sectionTitle">Recent Documents</h2>
         <div className="docGridContainer">
           <div className="docGrid">
             {documents.map((doc) => (

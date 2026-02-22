@@ -1,8 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from backend.core.orchestrator import Orchestrator
+from backend.utils.parser import DocumentParser
 from pydantic import BaseModel
 
 app = FastAPI(title="IDAS Project Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize Orchestrator
 orchestrator = Orchestrator()
@@ -43,3 +53,62 @@ def classify_requirement(request: AnalysisRequest):
 def audit_requirement(request: AnalysisRequest):
     result = orchestrator.process(request.text, task_type="audit")
     return {"result": result}
+
+@app.post("/resolve")
+def resolve_issue(request: AnalysisRequest):
+    result = orchestrator.process(request.text, task_type="resolve")
+    return {"result": result}
+
+@app.get("/templates")
+def get_templates():
+    import json
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    templates_path = os.path.join(current_dir, "data", "templates.json")
+    with open(templates_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+@app.get("/session")
+def get_session():
+    import json
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    session_path = os.path.join(current_dir, "data", "session.json")
+    with open(session_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+@app.post("/session")
+def save_session(data: dict):
+    import json
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    session_path = os.path.join(current_dir, "data", "session.json")
+    with open(session_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    return {"status": "success"}
+
+@app.get("/ui-config")
+def get_ui_config():
+    import json
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(current_dir, "data", "ui_config.json")
+    with open(config_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+@app.post("/chat")
+def chat_with_ai(request: AnalysisRequest):
+    result = orchestrator.process(request.text, task_type="chat")
+    return {"result": result}
+
+@app.post("/upload-review")
+async def upload_review(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        parsed_text = DocumentParser.parse(file.filename, content)
+        result = orchestrator.process(parsed_text, task_type="review")
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+

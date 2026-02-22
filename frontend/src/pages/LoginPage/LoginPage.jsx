@@ -17,13 +17,12 @@ const LoginPage = () => {
     <div className="loginContainer">
       <div className="loginCard">
         <div className="text-center">
-          {/* Emojiyi kaldırıp resmi ekliyoruz */}
           <div className="logoIconContainer">
             <img src={idasLogo} alt="IDAS Logo" className="logoImage" />
           </div>
-          <h2 className="font-bold text-2xl text-slate-800">IDAS: Akıllı SRS Asistanı</h2>
+          <h2 className="loginTitle">IDAS: Akıllı SRS Asistanı</h2>
         </div>
-        
+
         <form onSubmit={handleLogin} className="mt-8">
           <div className="inputGroup">
             <label>Kullanıcı Adı</label>

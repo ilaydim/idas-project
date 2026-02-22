@@ -1,20 +1,130 @@
 {
-    "templates": [
-        {
-            "name": "Software Requirement Specification (SRS)",
-            "sections": [
-                "1. Introduction",
-                "1.1 Purpose",
-                "1.2 Scope",
-                "2. Overall Description",
-                "2.1 Product Perspective",
-                "2.2 Product Functions",
-                "3. Specific Requirements",
-                "3.1 Functional Requirements",
-                "3.2 Non-Functional Requirements",
-                "3.2.1 Performance Requirements",
-                "3.2.2 Security Requirements"
-            ]
-        }
-    ]
+    "IEEE_830": {
+        "title": "IEEE 830 (Classic)",
+        "description": "Traditional and most widely used standard for software requirements.",
+        "sections": [
+            {
+                "id": "1_intro",
+                "title": "1. Introduction",
+                "required": true,
+                "hint": "Purpose, scope and definitions."
+            },
+            {
+                "id": "2_overall",
+                "title": "2. Overall Description",
+                "required": true,
+                "hint": "Product perspective and functions."
+            },
+            {
+                "id": "3_specific",
+                "title": "3. Specific Requirements",
+                "required": true,
+                "hint": "Functional, non-functional and interface requirements."
+            },
+            {
+                "id": "4_appendix",
+                "title": "4. Appendices",
+                "required": false,
+                "hint": "Supporting information."
+            }
+        ]
+    },
+    "IEEE_29148": {
+        "title": "ISO/IEC/IEEE 29148 (Modern)",
+        "description": "Current, comprehensive industry standard for system and software engineering.",
+        "sections": [
+            {
+                "id": "1_intro",
+                "title": "1. Introduction",
+                "required": true,
+                "hint": "System purpose and overview."
+            },
+            {
+                "id": "2_references",
+                "title": "2. Normative References",
+                "required": false,
+                "hint": "Referenced standards or documents."
+            },
+            {
+                "id": "3_terms",
+                "title": "3. Terms and Definitions",
+                "required": true,
+                "hint": "Project specific terminology."
+            },
+            {
+                "id": "4_system_req",
+                "title": "4. System Requirements",
+                "required": true,
+                "hint": "Capabilities, functions and constraints."
+            },
+            {
+                "id": "5_verification",
+                "title": "5. Verification & Validation",
+                "required": true,
+                "hint": "Testing and acceptance criteria."
+            }
+        ]
+    },
+    "IEEE_AGILE": {
+        "title": "Agile-Focused IEEE",
+        "description": "Adapts IEEE standards for Agile processes with a user-centric structure.",
+        "sections": [
+            {
+                "id": "1_vision",
+                "title": "1. Product Vision",
+                "required": true,
+                "hint": "The 'Why' behind the project."
+            },
+            {
+                "id": "2_user_stories",
+                "title": "2. User Stories",
+                "required": true,
+                "hint": "As a [role], I want [feature] so that [benefit]."
+            },
+            {
+                "id": "3_backlog",
+                "title": "3. Functional Backlog",
+                "required": true,
+                "hint": "Prioritized feature list."
+            },
+            {
+                "id": "4_nonfunc_backlog",
+                "title": "4. Quality Attributes",
+                "required": true,
+                "hint": "NFRs in agile context (Definition of Done)."
+            }
+        ]
+    },
+    "HAVELSAN": {
+        "title": "HAVELSAN Standard SRS",
+        "description": "Customized document structure for corporate projects.",
+        "sections": [
+            {
+                "id": "1_intro",
+                "title": "1. Introduction",
+                "required": true,
+                "hint": "Project summary and purpose."
+            },
+            {
+                "id": "2_overall",
+                "title": "2. Overall Description",
+                "required": true
+            },
+            {
+                "id": "3_functional",
+                "title": "3. Functional Requirements",
+                "required": true
+            },
+            {
+                "id": "4_nonfunctional",
+                "title": "4. Non-Functional Requirements",
+                "required": true
+            },
+            {
+                "id": "5_glossary",
+                "title": "5. Glossary",
+                "required": false
+            }
+        ]
+    }
 }

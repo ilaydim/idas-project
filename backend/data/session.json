@@ -1,0 +1,25 @@
+{
+    "user": {
+        "name": "Ilayda Dim",
+        "initials": "ID",
+        "role": "Lead Analyst"
+    },
+    "document": {
+        "messages": [
+            {
+                "role": "ai",
+                "text": "I am ready. You can download the document after completing its structure."
+            }
+        ],
+        "revisionHistory": [
+            {
+                "id": 1,
+                "name": "Ilayda Dim",
+                "date": "24.01.2026",
+                "reason": "Initial Setup",
+                "version": "0.1"
+            }
+        ],
+        "content": {}
+    }
+}

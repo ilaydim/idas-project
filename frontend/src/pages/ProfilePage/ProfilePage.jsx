@@ -14,8 +14,11 @@ const ProfilePage = () => {
   return (
     <div className="profileContainer">
       <header className="profileHeader">
-        <button className="backBtn" onClick={() => window.history.back()}>← Dashboard</button>
-        <h2 className="headerTitle">Kullanıcı Profili</h2>
+        <button className="backBtn" onClick={() => window.history.back()}>
+          <span className="backIcon">←</span>
+          Geri Dön
+        </button>
+        <h2 className="headerTitle">Hesap Ayarları</h2>
       </header>
 
       <div className="profileLayout">
@@ -27,21 +30,33 @@ const ProfilePage = () => {
             </div>
             <h3 className="userName">{user.name}</h3>
             <p className="userRole">{user.role}</p>
-            <div className="userBadge">Premium Erişimi</div>
+            <div className="userBadge">Premium Access</div>
           </div>
 
-          <div className="userStatsCard">
-            <div className="profileStat">
-              <span>Yazılan</span>
-              <strong>{user.stats.authored}</strong>
-            </div>
-            <div className="profileStat">
-              <span>İncelenen</span>
-              <strong>{user.stats.reviewed}</strong>
-            </div>
-            <div className="profileStat">
-              <span>Başarı</span>
-              <strong>{user.stats.completionRate}</strong>
+          <div className="statsSection">
+            <h4 className="statsTitle">Performance Summary</h4>
+            <div className="userStatsCard">
+              <div className="profileStat">
+                <span className="statIcon">📄</span>
+                <div className="statInfo">
+                  <span>Authored</span>
+                  <strong>{user.stats.authored}</strong>
+                </div>
+              </div>
+              <div className="profileStat">
+                <span className="statIcon">👁️‍🗨️</span>
+                <div className="statInfo">
+                  <span>Reviewed</span>
+                  <strong>{user.stats.reviewed}</strong>
+                </div>
+              </div>
+              <div className="profileStat">
+                <span className="statIcon">🏆</span>
+                <div className="statInfo">
+                  <span>Success Rate</span>
+                  <strong>{user.stats.completionRate}</strong>
+                </div>
+              </div>
             </div>
           </div>
         </aside>
@@ -49,40 +64,40 @@ const ProfilePage = () => {
         {/* Sağ Sütun: Ayarlar ve Tercihler */}
         <main className="profileMain">
           <section className="settingsSection">
-            <h3>Hesap Ayarları</h3>
+            <h3>Account Settings</h3>
             <div className="inputRow">
               <div className="inputField">
-                <label>E-posta</label>
+                <label>Email</label>
                 <input type="email" defaultValue={user.email} />
               </div>
               <div className="inputField">
-                <label>Şifre</label>
-                <button className="changePasswordBtn">Şifreyi Güncelle</button>
+                <label>Password</label>
+                <button className="changePasswordBtn">Update Password</button>
               </div>
             </div>
           </section>
 
           <section className="settingsSection">
-            <h3>Sistem Tercihleri</h3>
+            <h3>System Preferences</h3>
             <div className="preferenceItem">
               <div className="prefInfo">
-                <strong>AI Otomatik Öneri</strong>
-                <p>Yazım sırasında AI'nın otomatik önerilerde bulunmasını sağlar.</p>
+                <strong>AI Auto-Suggest</strong>
+                <p>Enables automatic AI suggestions during writing.</p>
               </div>
               <input type="checkbox" defaultChecked className="toggle" />
             </div>
             <div className="preferenceItem">
               <div className="prefInfo">
-                <strong>HAVELSAN Terminoloji Kontrolü</strong>
-                <p>Dökümanı HAVELSAN standart terminolojisine göre denetler.</p>
+                <strong>HAVELSAN Terminology Check</strong>
+                <p>Checks the document according to HAVELSAN standard terminology.</p>
               </div>
               <input type="checkbox" defaultChecked className="toggle" />
             </div>
           </section>
 
           <div className="profileActions">
-            <button className="saveProfileBtn">Değişiklikleri Kaydet</button>
-            <button className="logoutBtn">Oturumu Kapat</button>
+            <button className="saveProfileBtn">Save Changes</button>
+            <button className="logoutBtn">Log Out</button>
           </div>
         </main>
       </div>

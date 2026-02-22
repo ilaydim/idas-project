@@ -1,107 +1,188 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ReviewPage.css";
+import DocumentUpload from "./components/DocumentUpload";
+
+const API_BASE = "http://127.0.0.1:8088";
 
 const ReviewPage = () => {
-  const [isAnalyzed, setIsAnalyzed] = useState(false);
-  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [uiConfig, setUiConfig] = useState(null);
+  const [status, setStatus] = useState("IDLE"); // IDLE, UPLOADING, REVIEWING
+  const [analysisData, setAnalysisData] = useState(null);
+  const [selectedReqId, setSelectedReqId] = useState(null);
 
-  // Simüle edilmiş analiz verileri
-  const analysisData = {
-    stats: { total: 15, fr: 10, nfr: 5, issues: 4 },
-    requirements: [
-      {
-        id: "REQ-001",
-        type: "FR",
-        text: "Sistem, kullanıcı giriş yaptıktan sonra verileri hızlıca getirmelidir.",
-        status: "warning",
-        issue: "Belirsizlik: 'Hızlıca' ifadesi ölçülebilir bir değer değildir.",
-        suggestion: "2 saniye altında olacak şekilde güncelleyin."
-      },
-      {
-        id: "REQ-002",
-        type: "NFR",
-        text: "Veritabanı bağlantısı TLS 1.3 protokolü ile şifrelenmelidir.",
-        status: "success",
-        issue: null
-      },
-      {
-        id: "REQ-003",
-        type: "FR",
-        text: "Arayüz tasarımı kullanıcıyı mutlu edecek düzeyde olmalıdır.",
-        status: "error",
-        issue: "Test Edilemez: Duygusal ifadeler test kriteri olamaz.",
-        suggestion: "Tasarım rehberindeki (UI Guide v2) standartlara atıfta bulunun."
+  useEffect(() => {
+    fetch(`${API_BASE}/ui-config`)
+      .then(res => res.json())
+      .then(data => setUiConfig(data))
+      .catch(err => console.error("UI Config load error:", err));
+  }, []);
+
+  const handleFileUpload = async (file) => {
+    setStatus("UPLOADING");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(`${API_BASE}/upload-review`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.error) {
+        setAnalysisData(data);
+        setStatus("ERROR");
+      } else {
+        setAnalysisData(data);
+        setStatus("REVIEWING");
       }
-    ]
+    } catch (error) {
+      console.error("Upload error:", error);
+      setStatus("ERROR");
+      setAnalysisData({ error: "Connection error. Please check if backend is running." });
+    }
   };
 
+  const handleApplySuggestion = (reqId) => {
+    setAnalysisData(prev => ({
+      ...prev,
+      requirements: prev.requirements.map(req => {
+        if (req.id === reqId) {
+          return { ...req, text: req.suggestion, status: "success", issue: null, suggestion: null };
+        }
+        return req;
+      })
+    }));
+  };
+
+  if (status === "IDLE") {
+    return (
+      <div className="review-page idle">
+        <header className="review-header">
+          <div className="review-header-left">
+            <button className="back-btn" onClick={() => window.history.back()}>← Dashboard</button>
+            <h1>{uiConfig?.review.title || "Document Review"}</h1>
+          </div>
+        </header>
+        <div className="upload-container">
+          <DocumentUpload onUpload={handleFileUpload} uiConfig={uiConfig} />
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "UPLOADING") {
+    return (
+      <div className="review-page loading">
+        <div className="spinner-box">
+          <div className="spinner"></div>
+          <p>{uiConfig?.review.analyzing || "Analyzing your document..."}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "ERROR") {
+    return (
+      <div className="review-page error-state">
+        <header className="review-header">
+          <div className="review-header-left">
+            <button className="back-btn" onClick={() => setStatus("IDLE")}>← Try Again</button>
+            <h1>Analysis Error</h1>
+          </div>
+        </header>
+        <div className="error-content">
+          <div className="error-icon">❌</div>
+          <h2>Oops! Something went wrong.</h2>
+          <p className="error-msg">{analysisData?.error || "Unknown error occurred during analysis."}</p>
+          {analysisData?.raw && (
+            <pre className="raw-debug">AI Response: {analysisData.raw}</pre>
+          )}
+          <button className="retry-btn" onClick={() => setStatus("IDLE")}>Go Back & Retry</button>
+        </div>
+      </div>
+    );
+  }
+
+  const selectedReq = analysisData?.requirements?.find(r => r.id === selectedReqId);
+  const stats = analysisData?.stats || { total: 0, fr: 0, nfr: 0, issues: 0 };
+
   return (
-    <div className="reviewContainer">
-      {/* Üst Bar */}
-      <header className="reviewHeader">
-        <button className="backBtn" onClick={() => window.history.back()}>← Geri</button>
-        <h2 className="headerTitle">İnceleme Raporu</h2>
-        <div className="headerActions">
-          <button className="actionBtn secondary">Raporu İndir (.pdf)</button>
-          <button className="actionBtn primary">Dökümanı Kaydet</button>
+    <div className="review-page results">
+      <header className="results-header">
+        <div className="review-header-left">
+          <button className="back-btn" onClick={() => setStatus("IDLE")}>← New Upload</button>
+          <h1>{uiConfig?.review.title || "Analysis Results"}</h1>
+        </div>
+        <div className="header-actions">
+          <button className="export-btn">{uiConfig?.review.download_btn || "Export Report"}</button>
+          <button className="save-btn">{uiConfig?.review.save_btn || "Save"}</button>
         </div>
       </header>
 
-      <div className="reviewLayout">
-        {/* SOL: Analiz Özet Paneli */}
-        <aside className="reviewSummary">
-          <div className="summaryCard">
-            <h3>Analiz Özeti</h3>
-            <div className="statGrid">
-              <div className="statItem"><span>Toplam</span><strong>{analysisData.stats.total}</strong></div>
-              <div className="statItem fr"><span>FR</span><strong>{analysisData.stats.total}</strong></div>
-              <div className="statItem nfr"><span>NFR</span><strong>{analysisData.stats.nfr}</strong></div>
-              <div className="statItem error"><span>Kusur</span><strong>{analysisData.stats.issues}</strong></div>
+      <div className="review-layout">
+        <aside className="review-summary">
+          <div className="summary-card">
+            <h3>{uiConfig?.review.summary_title || "Summary"}</h3>
+            <div className="stat-grid">
+              <div className="stat-item">
+                <span>{uiConfig?.review.total_label || "Total"}</span>
+                <strong>{stats.total}</strong>
+              </div>
+              <div className="stat-item warning">
+                <span>{uiConfig?.review.issue_label || "Issues"}</span>
+                <strong>{stats.issues}</strong>
+              </div>
+              <div className="stat-item fr">
+                <span>FR</span>
+                <strong>{stats.fr}</strong>
+              </div>
+              <div className="stat-item nfr">
+                <span>NFR</span>
+                <strong>{stats.nfr}</strong>
+              </div>
             </div>
-          </div>
-
-          <div className="filterBox">
-            <h4>Filtrele</h4>
-            <div className="filterOption"><input type="checkbox" defaultChecked /> Sadece Kusurluları Göster</div>
-            <div className="filterOption"><input type="checkbox" defaultChecked /> FR / NFR Ayrımı Yap</div>
           </div>
         </aside>
 
-        {/* ORTA: Gereksinim Listesi */}
-        <main className="resultsArea">
-          {analysisData.requirements.map((req) => (
-            <div 
-              key={req.id} 
-              className={`reqCard ${req.status} ${selectedIssue === req.id ? 'selected' : ''}`}
-              onClick={() => setSelectedIssue(req.id)}
+        <main className="results-list">
+          {analysisData?.requirements?.map((req) => (
+            <div
+              key={req.id}
+              className={`req-card ${req.status} ${selectedReqId === req.id ? 'active' : ''}`}
+              onClick={() => setSelectedReqId(req.id)}
             >
-              <div className="reqMeta">
-                <span className="reqId">{req.id}</span>
-                <span className={`reqBadge ${req.type.toLowerCase()}`}>{req.type}</span>
+              <div className="req-meta">
+                <span className="req-id">{req.id}</span>
+                <span className={`type-badge ${req.type.toLowerCase()}`}>{req.type}</span>
               </div>
-              <p className="reqText">{req.text}</p>
+              <p className="req-text">{req.text}</p>
               {req.issue && (
-                <div className="issueAlert">
-                  <strong>⚠️ Tespit Edilen Kusur:</strong> {req.issue}
+                <div className="issue-msg">
+                  <strong>⚠️ Issue:</strong> {req.issue}
                 </div>
               )}
             </div>
           ))}
         </main>
 
-        {/* SAĞ: Öneri Paneli */}
-        <aside className="suggestionPanel">
-          <h3>İyileştirme Önerisi</h3>
-          {selectedIssue ? (
-            <div className="suggestionContent">
-              <p className="suggestionIntro">Seçili gereksinim için AI önerisi:</p>
-              <div className="suggestionBox">
-                {analysisData.requirements.find(r => r.id === selectedIssue)?.suggestion || "Bu gereksinim standartlara uygundur."}
-              </div>
-              <button className="applySuggestionBtn">Öneriyi Uygula</button>
+        <aside className="suggestion-panel">
+          <h3>{uiConfig?.review.suggestion_title || "AI Suggestion"}</h3>
+          {selectedReq ? (
+            <div className="suggestion-box">
+              <p className="suggestion-text">
+                {selectedReq.suggestion || "This requirement follows best practices."}
+              </p>
+              {selectedReq.suggestion && (
+                <button
+                  className="apply-btn"
+                  onClick={() => handleApplySuggestion(selectedReq.id)}
+                >
+                  {uiConfig?.review.apply_btn || "Apply Correction"}
+                </button>
+              )}
             </div>
           ) : (
-            <p className="noSelection">Detayları görmek için bir gereksinim seçin.</p>
+            <p className="hint-text">Select a requirement to see suggestions.</p>
           )}
         </aside>
       </div>

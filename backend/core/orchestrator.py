@@ -5,6 +5,11 @@ from backend.agents.glossary_agent import GlossaryAgent
 from backend.agents.drafting_agent import DraftingAgent
 from backend.agents.classifier_agent import ClassifierAgent
 from backend.agents.quality_agent import QualityAgent
+from backend.agents.resolution_agent import ResolutionAgent
+from backend.agents.chat_agent import ChatAgent
+from backend.agents.review_agent import ReviewAgent
+
+
 
 class Orchestrator(BaseAgent):
     def __init__(self, model_name=None):
@@ -16,6 +21,11 @@ class Orchestrator(BaseAgent):
         self.drafting_agent = DraftingAgent(model_name)
         self.classifier_agent = ClassifierAgent(model_name)
         self.quality_agent = QualityAgent(model_name)
+        self.resolution_agent = ResolutionAgent(model_name)
+        self.chat_agent = ChatAgent(model_name)
+        self.review_agent = ReviewAgent(model_name)
+
+
 
     def process(self, input_text, task_type="analyze"):
         """
@@ -34,6 +44,14 @@ class Orchestrator(BaseAgent):
             return self.classifier_agent.process(input_text)
         elif task_type == "audit":
             return self.quality_agent.process(input_text)
+        elif task_type == "resolve":
+            return self.resolution_agent.process(input_text)
+        elif task_type == "chat":
+            return self.chat_agent.process(input_text)
+        elif task_type == "review":
+            return self.review_agent.process(input_text)
+
+
         else:
             return "Unknown task type."
 

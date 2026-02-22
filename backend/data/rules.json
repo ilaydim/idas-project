@@ -1,0 +1,88 @@
+{
+    "quality_rules": [
+        {
+            "id": "QR001",
+            "category": "Ambiguity",
+            "rule": "Avoid ambiguous words that don't have a clear, measurable definition.",
+            "forbidden_words": [
+                "quickly",
+                "fast",
+                "efficient",
+                "easy",
+                "simple",
+                "optimize",
+                "flexible",
+                "user-friendly",
+                "powerful",
+                "modular"
+            ],
+            "explanation": "These words are subject to varying interpretations. Numerical values (e.g., 'under 2 seconds') should be used instead."
+        },
+        {
+            "id": "QR002",
+            "category": "Subjectivity",
+            "rule": "Avoid subjective terms that depend on personal opinion.",
+            "forbidden_words": [
+                "if necessary",
+                "where appropriate",
+                "if possible",
+                "when requested",
+                "as desired",
+                "generally",
+                "mostly"
+            ],
+            "explanation": "These phrases leave it unclear when the requirement will be applied."
+        },
+        {
+            "id": "QR003",
+            "category": "Non-Verifiable",
+            "rule": "Requirements must be testable and verifiable.",
+            "forbidden_words": [
+                "should never fail",
+                "absolutely secure",
+                "must perform best",
+                "error-free"
+            ],
+            "explanation": "Concepts like 100% error-free or 'best' cannot be tested. Acceptance criteria must be concrete."
+        },
+        {
+            "id": "QR004",
+            "category": "Continuity",
+            "rule": "Avoid words that imply an infinite or indefinite state.",
+            "forbidden_words": [
+                "forever",
+                "always",
+                "never",
+                "continuously"
+            ],
+            "explanation": "System states should be defined under specific triggers and conditions."
+        }
+    ],
+    "forbidden_words_list": [
+        "quickly",
+        "fast",
+        "efficient",
+        "easy",
+        "simple",
+        "optimize",
+        "flexible",
+        "user-friendly",
+        "powerful",
+        "modular",
+        "if necessary",
+        "where appropriate",
+        "if possible",
+        "when requested",
+        "as desired",
+        "generally",
+        "mostly",
+        "should never fail",
+        "absolutely secure",
+        "must perform best",
+        "error-free",
+        "forever",
+        "always",
+        "never",
+        "continuously"
+    ]
+}

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SRS_TEMPLATES } from "../../utils/templates";
 
-const DownloadMenu = ({ selectedTemplate, content, revisionHistory }) => {
+const DownloadMenu = ({ selectedTemplate, content, revisionHistory, templates, uiConfig }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -16,7 +15,8 @@ const DownloadMenu = ({ selectedTemplate, content, revisionHistory }) => {
 
   const handleExport = (format) => {
     setIsOpen(false);
-    const templateData = SRS_TEMPLATES[selectedTemplate];
+    const templateData = templates[selectedTemplate];
+    if (!templateData) return;
     const docTitle = templateData.title;
 
     // --- İÇERİK BİRLEŞTİRME (Sıralı ve Temiz) ---
@@ -60,7 +60,7 @@ const DownloadMenu = ({ selectedTemplate, content, revisionHistory }) => {
       const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
       const footer = "</body></html>";
       const sourceHTML = header + htmlContent + footer;
-      
+
       const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -73,7 +73,7 @@ const DownloadMenu = ({ selectedTemplate, content, revisionHistory }) => {
   return (
     <div className="download-dropdown" ref={menuRef}>
       <button className="download-icon-btn" onClick={() => setIsOpen(!isOpen)}>
-        <span>📥</span> İndir
+        <span>📥</span> {uiConfig?.navbar.download_btn || "İndir"}
       </button>
       {isOpen && (
         <div className="download-menu-list">

@@ -4,10 +4,11 @@
 
 @layer base {
   body {
-    /* Teknik bir arka plan deseni oluşturur */
-    background-color: #f8fafc;
-    background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
-    background-size: 24px 24px;
+    background-color: #f1f5f9;
+    background-image:
+      linear-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
     @apply text-slate-900 antialiased font-sans;
   }
 }

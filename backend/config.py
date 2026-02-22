@@ -1,7 +1,10 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# .env dosyasının yolunu belirle (backend/ içinde)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(current_dir, ".env")
+load_dotenv(dotenv_path=env_path, override=True)
 
 class Config:
     # Proje kök dizinini bul (backend klasörünün bir üstü)
