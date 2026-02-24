@@ -1,15 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../utils/supabase";
 import './ProfilePage.css';
 import idasLogo from '../../assets/images/icon.png';
 
 const ProfilePage = () => {
-  // Simüle edilmiş kullanıcı verisi
-  const user = {
-    name: "İlayda Dim",
-    role: "Senior Software Analyst",
-    email: "ilayda.dim@havelsan.com.tr",
-    stats: { authored: 12, reviewed: 8, completionRate: "94%" }
+  const navigate = useNavigate();
+
+  const [authUser, setAuthUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Demo alanlar (şimdilik kalsın)
+  const demo = {
+    role: "—",
+    stats: { authored: 0, reviewed: 0, completionRate: "—" }
   };
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        // Login yoksa profile'a girilmesin
+        navigate("/login");
+        return;
+      }
+      setAuthUser(data.user);
+      setLoading(false);
+    };
+
+    loadUser();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
+  const displayName =
+    authUser?.user_metadata?.full_name ||
+    authUser?.email ||
+    "Kullanıcı";
+
+  const email = authUser?.email || "";
+
+  if (loading) {
+    return <div className="profileContainer">Yükleniyor...</div>;
+  }
 
   return (
     <div className="profileContainer">
@@ -28,9 +64,9 @@ const ProfilePage = () => {
             <div className="avatarContainer">
               <img src={idasLogo} alt="User Avatar" className="profileAvatar" />
             </div>
-            <h3 className="userName">{user.name}</h3>
-            <p className="userRole">{user.role}</p>
-            <div className="userBadge">Premium Access</div>
+            <h3 className="userName">{displayName}</h3>
+            <p className="userRole">{demo.role}</p>
+            <div className="userBadge">Free</div>
           </div>
 
           <div className="statsSection">
@@ -40,21 +76,21 @@ const ProfilePage = () => {
                 <span className="statIcon">📄</span>
                 <div className="statInfo">
                   <span>Authored</span>
-                  <strong>{user.stats.authored}</strong>
+                  <strong>{demo.stats.authored}</strong>
                 </div>
               </div>
               <div className="profileStat">
                 <span className="statIcon">👁️‍🗨️</span>
                 <div className="statInfo">
                   <span>Reviewed</span>
-                  <strong>{user.stats.reviewed}</strong>
+                  <strong>{demo.stats.reviewed}</strong>
                 </div>
               </div>
               <div className="profileStat">
                 <span className="statIcon">🏆</span>
                 <div className="statInfo">
                   <span>Success Rate</span>
-                  <strong>{user.stats.completionRate}</strong>
+                  <strong>{demo.stats.completionRate}</strong>
                 </div>
               </div>
             </div>
@@ -68,11 +104,13 @@ const ProfilePage = () => {
             <div className="inputRow">
               <div className="inputField">
                 <label>Email</label>
-                <input type="email" defaultValue={user.email} />
+                <input type="email" value={email} readOnly />
               </div>
               <div className="inputField">
                 <label>Password</label>
-                <button className="changePasswordBtn">Update Password</button>
+                <button className="changePasswordBtn" disabled>
+                  Update Password (yakında)
+                </button>
               </div>
             </div>
           </section>
@@ -96,8 +134,12 @@ const ProfilePage = () => {
           </section>
 
           <div className="profileActions">
-            <button className="saveProfileBtn">Save Changes</button>
-            <button className="logoutBtn">Log Out</button>
+            <button className="saveProfileBtn" disabled>
+              Save Changes (yakında)
+            </button>
+            <button className="logoutBtn" onClick={handleLogout}>
+              Log Out
+            </button>
           </div>
         </main>
       </div>

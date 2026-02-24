@@ -1,222 +1,355 @@
-.dashboardWrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Dashboard.css */
+:root {
+  --murdum: #74467D;
+  --lacivert: #231E53;
+  --bg-color: #f8fafc; /* Landing Page ferahlığı */
+  --border-color: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
 }
 
+.dashboardWrapper {
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  padding: 40px 6%;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+/* KARELİ KAĞIT ARKA PLAN */
+.cyber-grid {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: linear-gradient(rgba(35, 30, 83, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(35, 30, 83, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* HEADER */
 .dashboardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 4rem;
+  position: relative;
   z-index: 10;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  margin-bottom: 60px;
 }
 
-.welcomeTop {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #3b82f6;
-  margin-bottom: -5px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.dashboardTitle {
-  font-size: 3rem;
-  font-weight: 900;
-  color: #0f172a;
-}
-
-/* Mod Butonları */
-.pillButtonContainer {
-  display: flex;
-  gap: 1.5rem;
-  margin: 4rem auto;
-  z-index: 10;
-}
-
-.pillBtn {
-  background: #0f172a;
-  color: white;
-  padding: 1.5rem 3.5rem;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.2rem;
-  border: none;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-  transition: all 0.3s ease;
-}
-
-.pillBtn:hover {
-  background: #1e293b;
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.3);
-}
-
-/* Doküman Paneli */
-.contentSection {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 4rem 4rem;
-  z-index: 10;
-}
-
-.sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 2rem;
-  letter-spacing: -0.02em;
+.headerLeft {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 25px;
 }
 
-.sectionTitle::before {
-  content: "";
-  display: block;
-  width: 4px;
-  height: 24px;
-  background: #3b82f6;
-  border-radius: 2px;
+.brand-logo {
+  height: 75px; /* Landing Page boyutu */
+  width: auto;
+  transition: transform 0.3s ease;
 }
 
-.docGridContainer {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
-  padding: 3rem;
-  border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin-bottom: 4rem;
+.brand-logo:hover { transform: scale(1.05); }
+
+.welcome-text h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--lacivert);
+  margin: 0;
+  letter-spacing: -1px;
 }
 
-.docGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2rem;
-}
+.welcome-text p { color: var(--text-muted); font-size: 16px; margin-top: 4px; }
 
-/* Doküman Kartı Tasarımı */
-.docCard {
+/* PROFİL (Geliştirilmiş profile-rect) */
+.profile-rect {
   background: white;
-  border-radius: 1.25rem;
-  padding: 1.25rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 14px;
   cursor: pointer;
-  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.docCard:hover {
-  transform: translateY(-8px) rotate(1deg);
-  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
-  border-color: #3b82f6;
+.profile-rect:hover {
+  border-color: var(--murdum);
+  box-shadow: 0 8px 20px rgba(116, 70, 125, 0.1);
 }
 
-.docPreview {
-  background: #f8fafc;
-  aspect-ratio: 4/3;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
+.rect-inner {
+  background: var(--lacivert);
+  color: white;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* MOD SEÇİMİ (2'li Grid) */
+.modeSelectionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 10;
+}
+
+.modeCard {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modeCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--murdum);
+  box-shadow: 0 20px 40px rgba(35, 30, 83, 0.08);
+}
+
+.modeIcon { font-size: 45px; }
+.modeCard h3 { font-size: 22px; color: var(--lacivert); margin-bottom: 8px; font-weight: 700; }
+
+/* WORKSPACE SECTION (3'lü Grid ve Ortalama) */
+.workspace-section {
+  max-width: 1200px; /* Merkeze odaklama */
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.workspace-header {
+  margin-bottom: 35px;
+}
+
+.workspace-header-text h2 { font-size: 24px; font-weight: 800; color: var(--lacivert); }
+.workspace-header-text p { color: var(--text-muted); font-size: 15px; margin-top: 5px; }
+
+/* 3'LÜ GRID */
+.doc-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tam olarak 3 adet */
+  gap: 30px;
+}
+
+/* DOKÜMAN KART TASARIMI */
+.doc-item-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 22px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
+  min-height: 220px;
+  transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-  border: 1px solid #f1f5f9;
-  margin-bottom: 1rem;
 }
 
-.docHeaderLine {
-  height: 6px;
-  width: 30%;
-  background: #3b82f6;
-  border-radius: 2px;
-  margin-bottom: 1.5rem;
+.doc-item-card:hover {
+  border-color: var(--murdum);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.06);
 }
 
-.line {
-  height: 3px;
-  background: #e2e8f0;
-  border-radius: 1.5px;
-  margin-bottom: 0.75rem;
+.doc-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
 }
 
-.line.long {
-  width: 100%;
+.file-icon-bg {
+  background: #f1f5f9;
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
 }
 
-.line.medium {
-  width: 80%;
+.delete-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #94a3b8;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.line.short {
-  width: 50%;
-}
+.delete-btn:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
 
-.docTypeTag {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: #3b82f6;
-  background: #eff6ff;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-}
-
-.docInfo {
-  padding: 0 0.25rem;
-}
-
-.docTitleText {
-  font-size: 0.95rem;
+.doc-title-text {
+  font-size: 19px;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.25rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--lacivert);
+  margin-bottom: 12px;
+  line-height: 1.3;
 }
 
-.docDateText {
-  font-size: 0.8rem;
-  color: #64748b;
-  font-weight: 500;
+.doc-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-/* Profil İkonu Tasarımı */
-.userProfileIcon {
-  height: 48px;
-  width: 48px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-radius: 1rem;
+.type-tag {
+  background: rgba(116, 70, 125, 0.08);
+  color: var(--murdum);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(116, 70, 125, 0.1);
+}
+
+.status-indicator {
+  font-size: 11px;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.doc-card-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.date-info .label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 2px; }
+.date-info .value { font-size: 13px; font-weight: 600; color: #64748b; }
+
+.edit-action {
+  color: var(--murdum);
+  font-weight: 700;
+  font-size: 13px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 5px;
+  opacity: 0.6;
+  transition: 0.3s;
 }
 
-.userProfileIcon:hover {
-  transform: scale(1.05) rotate(5deg);
-  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+.doc-item-card:hover .edit-action { opacity: 1; }
+
+/* EMPTY STATE */
+.empty-state {
+  grid-column: span 3;
+  text-align: center;
+  padding: 80px 0;
+  background: white;
+  border-radius: 30px;
+  border: 2px dashed #e2e8f0;
 }
 
+.empty-icon { font-size: 60px; margin-bottom: 15px; }
+
+/* FOOTER */
 .dashboardFooter {
-  margin-top: auto;
-  padding: 4rem 0 2rem;
+  text-align: center;
+  margin-top: 100px;
+  padding-bottom: 40px;
   color: #94a3b8;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .doc-grid-container { grid-template-columns: repeat(2, 1fr); }
+  .empty-state { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+  .modeSelectionGrid, .doc-grid-container { grid-template-columns: 1fr; }
+  .empty-state { grid-column: span 1; }
+  .brand-logo { height: 60px; }
+}
+
+/* NAVBAR (YENİ) */
+.main-navbar {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  margin: 20px 6% 0;
+  padding: 12px 25px;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 20px;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+/* ARKA PLAN YANIP SÖNME (BREATHING GLOBS) */
+.dashboardWrapper::before {
+  content: "";
+  position: absolute;
+  top: 20%; left: 10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(116, 70, 125, 0.15) 0%, transparent 70%);
+  z-index: 0;
+  animation: breathingGlow 8s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes breathingGlow {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.3); opacity: 0.6; }
+}
+
+/* SCAN EFEKTİ (MODE CARD) - SOLDAN SAĞA YUMUŞAK TARAMA */
+.modeCard {
+  position: relative;
+  overflow: hidden; /* Efektin dışarı taşmasını engeller */
+}
+
+.modeCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%; /* Başlangıçta butonun tamamen dışında solda */
+  width: 100%;
+  height: 100%;
+  /* Geniş ve yumuşak bir ışık hüzmesi */
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(116, 70, 125, 0.08), /* Mürdüm rengi çok hafif parlama */
+    rgba(116, 70, 125, 0.2),  /* Merkezde biraz daha belirgin */
+    rgba(116, 70, 125, 0.08),
+    transparent
+  );
+  transform: skewX(-20deg); /* Işığın daha estetik, eğik durması için */
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.modeCard:hover::after {
+  animation: sweepRight 1.5s ease-in-out infinite;
+}
+
+@keyframes sweepRight {
+  0% {
+    left: -150%;
+  }
+  50% {
+    left: 100%; /* Hızlıca butonu boydan boya geçer */
+  }
+  100% {
+    left: 150%; /* Tamamen sağdan çıkar */
+  }
 }

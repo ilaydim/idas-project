@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import LandingPage from "./pages/LandingPage/LandingPage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
 
 // Yeni klasör yapısına göre import yolları 
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
@@ -12,26 +14,23 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen">
-        <Routes>
+      <Routes>
+        {/* Landing */}
+        <Route path="/" element={<LandingPage />} />
 
-          {/* Giriş ekranı - Kimlik doğrulama gereksinimi için [cite: 130, 209] */}
-          <Route path="/" element={<LoginPage />} />
+        {/* Auth */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-          {/* Profile ekranı */}
-          <Route path="/profile" element={<ProfilePage />} />
+        {/* Mevcut sayfalar */}
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/authoring" element={<AuthoringPage />} />
+        <Route path="/review" element={<ReviewPage />} />
 
-          {/* Dashboard - Mod seçimi için [cite: 77, 142] */}
-          <Route path="/dashboard" element={<Dashboard />} />
-
-          {/* Yazım Modu - HAVELSAN şablonu desteği [cite: 19, 307] */}
-          <Route path="/authoring" element={<AuthoringPage />} />
-
-          {/* İnceleme Modu - .docx analizi için [cite: 20, 237] */}
-          <Route path="/review" element={<ReviewPage />} />
-
-          {/* Hatalı rotalarda Giriş sayfasına yönlendir [cite: 132, 173] */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
       </div>
     </Router>
   );

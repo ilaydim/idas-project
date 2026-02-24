@@ -1,0 +1,312 @@
+/* GENEL AYARLAR */
+.register-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #ffffff;
+  overflow: hidden; 
+}
+
+/* --- SOL PANEL (Hareketli Kart Alanı) --- */
+.register-brand-side {
+  flex: 1;
+  background: #231E53; /* Logonun lacivert tonu */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px; /* Daha derin bir 3D hissi */
+}
+
+/* Süzülen Kartların Konteyneri */
+.floating-cards-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Kartların Temel Stili */
+/* SADECE KAYIT SAYFASINDAKİ UÇAN KARTLAR */
+.floating-cards-container .floating-ai-card {
+  position: absolute; /* Kartların tekrar serbestçe uçmasını sağlar */
+  background: rgba(255, 255, 255, 0.95); 
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #ef4444; 
+  border-radius: 12px;
+  padding: 14px; 
+  width: 270px; 
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+  transform: scale(var(--scale)) rotate(var(--rot));
+  animation: floatGeneric var(--duration) ease-in-out infinite alternate;
+  animation-delay: var(--delay);
+  opacity: var(--op);
+  z-index: var(--z);
+  will-change: transform; 
+}
+
+/* Kart İçeriği Stilleri */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mock-id { font-weight: 700; font-size: 12px; color: #64748b; }
+.mock-badge { font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px; letter-spacing: 0.5px; }
+
+/* Renk Kodlamaları */
+.badge-s { background: #fee2e2; color: #ef4444; } /* Kırmızı */
+.badge-m { background: #fef3c7; color: #d97706; } /* Turuncu */
+.badge-t { background: #e0e7ff; color: #3730a3; } /* Lacivert/Mor */
+.badge-a { background: #fce7f3; color: #db2777; } /* Pembe */
+.badge-r { background: #dcfce7; color: #16a34a; } /* Yeşil */
+
+.card-text { font-size: 12px; color: #1e293b; margin-bottom: 8px; line-height: 1.4; font-weight: 500;}
+.card-suggestion { font-size: 11px; color: #059669; font-weight: 600; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+
+
+/* --- 10 KART İÇİN DENGELİ VE 3D DAĞILIM --- */
+/* Ön Plan (Büyük, Net, Üstte) | Orta Plan | Arka Plan (Küçük, Flu, Yavaş) */
+
+.card-pos-1 {
+  /* Sol Üst (Orta Plan) */
+  top: 6%; left: 4%; 
+  --scale: 0.9; --rot: -3deg; --op: 0.9; --z: 10;
+  --duration: 12s; --delay: 0s;
+}
+.card-pos-2 {
+  /* Sağ Üst (Ön Plan) */
+  top: 10%; right: 5%; border-left-color: #d97706; 
+  --scale: 1.05; --rot: 2deg; --op: 1; --z: 20;
+  --duration: 14s; --delay: -2s;
+}
+.card-pos-3 {
+  /* Sol Orta (Arka Plan - Küçük ve Flu) */
+  top: 38%; left: -2%; border-left-color: #3730a3; 
+  --scale: 0.65; --rot: -5deg; --op: 0.5; --z: 5;
+  --duration: 18s; --delay: -7s;
+}
+.card-pos-4 {
+  /* Sağ Alt (Orta Plan) */
+  bottom: 12%; right: 6%; border-left-color: #db2777; 
+  --scale: 0.95; --rot: 4deg; --op: 0.95; --z: 12;
+  --duration: 11s; --delay: -1s;
+}
+.card-pos-5 {
+  /* TAM ORTA (En Ön Plan - Kahraman Kart) */
+  top: 42%; left: 28%; border-left-color: #16a34a; 
+  --scale: 1.15; --rot: -1deg; --op: 1; --z: 30;
+  --duration: 15s; --delay: -5s;
+}
+.card-pos-6 {
+  /* Sağ Orta (Arka Plan - Küçük) */
+  top: 30%; right: 15%; border-left-color: #d97706; 
+  --scale: 0.7; --rot: 3deg; --op: 0.6; --z: 6;
+  --duration: 16s; --delay: -4s;
+}
+.card-pos-7 {
+  /* Sol Alt (Ön Plan) */
+  bottom: 15%; left: 8%; border-left-color: #ef4444; 
+  --scale: 1; --rot: -4deg; --op: 0.95; --z: 15;
+  --duration: 13s; --delay: -6s;
+}
+.card-pos-8 {
+  /* Sağ Alt İç (Arka Plan) */
+  top: 65%; right: 20%; border-left-color: #3730a3; 
+  --scale: 0.75; --rot: -2deg; --op: 0.7; --z: 8;
+  --duration: 17s; --delay: -3s;
+}
+.card-pos-9 {
+  /* Üst Orta (Orta Plan) */
+  top: 2%; left: 35%; border-left-color: #db2777; 
+  --scale: 0.85; --rot: 1deg; --op: 0.8; --z: 11;
+  --duration: 14s; --delay: -8s;
+}
+.card-pos-10 {
+  /* Alt Orta (Orta Plan) */
+  bottom: 4%; left: 45%; border-left-color: #16a34a; 
+  --scale: 0.85; --rot: 2deg; --op: 0.85; --z: 11;
+  --duration: 12s; --delay: -2.5s;
+}
+
+/* Süzülme Animasyonu (CSS değişkenleri sayesinde boyutlar ve açılar bozulmaz) */
+@keyframes floatGeneric {
+  0% { transform: translateY(0px) scale(var(--scale)) rotate(var(--rot)); }
+  50% { transform: translateY(-25px) scale(var(--scale)) rotate(var(--rot)); }
+  100% { transform: translateY(0px) scale(var(--scale)) rotate(var(--rot)); }
+}
+
+/* Sol arkadaki parlama efekti */
+.register-glow-blob {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(0,0,0,0) 70%);
+  bottom: -200px;
+  left: -200px;
+  z-index: 0;
+}
+
+/* --- SAĞ PANEL (Form Alanı) --- */
+.register-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  text-align: center; 
+}
+
+/* LOGO */
+.form-logo-center {
+  margin-bottom: 30px;
+  cursor: pointer;
+  display: inline-block; 
+}
+
+.form-logo-center img {
+  height: 120px; 
+  width: auto;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+}
+
+.form-logo-center img:hover {
+  transform: scale(1.05);
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+
+.form-header p {
+  color: #64748b;
+  font-size: 16px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left; 
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.input-group input {
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #0f172a;
+  transition: all 0.2s;
+  background-color: #f8fafc;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #231E53; /* Focus rengi */
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(35, 30, 83, 0.1);
+}
+
+/* BUTON RENGİ (#231E53) */
+.btn-register-primary {
+  margin-top: 10px;
+  background-color: #231E53; 
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -5px rgba(35, 30, 83, 0.4);
+  transition: all 0.2s;
+}
+
+.btn-register-primary:hover {
+  background-color: #17133b; 
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px -5px rgba(35, 30, 83, 0.5);
+}
+
+.register-footer {
+  margin-top: 32px;
+  font-size: 15px;
+  color: #64748b;
+}
+
+.register-footer span {
+  color: #231E53; 
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.register-footer span:hover {
+  color: #17133b;
+  text-decoration: underline;
+}
+
+/* MOBİL UYUM */
+@media (max-width: 1024px) {
+  .register-container {
+    flex-direction: column;
+  }
+  
+  .register-brand-side {
+    min-height: 500px; 
+    padding: 20px;
+  }
+  
+  /* Mobilde kalabalık olmaması için küçük arkaplan kartlarını gizliyoruz */
+  .card-pos-3, .card-pos-6, .card-pos-8, .card-pos-9, .card-pos-10 {
+    display: none;
+  }
+  
+  .floating-ai-card {
+    width: 240px;
+    padding: 12px;
+  }
+  
+  /* Mobilde kalan 5 kart için ortalanmış konumlar */
+  .card-pos-1 { top: 5%; left: 50%; transform: translateX(-50%) rotate(-2deg) scale(0.9); }
+  .card-pos-2 { top: 25%; left: 50%; right: auto; transform: translateX(-50%) rotate(3deg) scale(0.9); }
+  .card-pos-5 { top: 45%; left: 50%; transform: translateX(-50%) rotate(-1deg) scale(1); }
+  .card-pos-4 { top: 65%; left: 50%; right: auto; transform: translateX(-50%) rotate(2deg) scale(0.9); }
+  .card-pos-7 { top: 85%; left: 50%; transform: translateX(-50%) rotate(-3deg) scale(0.9); }
+
+  .register-form-side {
+    padding: 60px 20px;
+  }
+}

@@ -9,8 +9,6 @@ from backend.agents.resolution_agent import ResolutionAgent
 from backend.agents.chat_agent import ChatAgent
 from backend.agents.review_agent import ReviewAgent
 
-
-
 class Orchestrator(BaseAgent):
     def __init__(self, model_name=None):
         super().__init__(model_name)
@@ -25,14 +23,16 @@ class Orchestrator(BaseAgent):
         self.chat_agent = ChatAgent(model_name)
         self.review_agent = ReviewAgent(model_name)
 
-
-
-    def process(self, input_text, task_type="analyze"):
+    # DİKKAT: req_id=None parametresini ekledik
+    def process(self, input_text, task_type="analyze", req_id=None):
         """
         Route the task to the appropriate agent.
         """
         if task_type == "analyze":
-            return self.analyst.process(input_text)
+            # req_id gelmezse sistemin çökmemesi için varsayılan bir değer atıyoruz
+            _req_id = req_id if req_id else " "
+            return self.analyst.process(_req_id, input_text)
+            
         elif task_type == "check_template":
             # For template check, input_text should be the full content
             return self.template_agent.process(input_text)
@@ -50,8 +50,6 @@ class Orchestrator(BaseAgent):
             return self.chat_agent.process(input_text)
         elif task_type == "review":
             return self.review_agent.process(input_text)
-
-
         else:
             return "Unknown task type."
 
