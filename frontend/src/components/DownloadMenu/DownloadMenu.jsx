@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./DownloadMenu.css";
 
 const DownloadMenu = ({ selectedTemplate, content, revisionHistory, templates, uiConfig }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +42,7 @@ const DownloadMenu = ({ selectedTemplate, content, revisionHistory, templates, u
     `;
 
     templateData.sections.forEach(sec => {
-      const text = content[sec.id] || "Bu bölüm henüz doldurulmamıştır.";
+      const text = content[sec.id] || "This section has not been filled out yet.";
       htmlContent += `<h2>${sec.title}</h2><p style="white-space: pre-wrap;">${text}</p>`;
     });
 
@@ -73,12 +74,12 @@ const DownloadMenu = ({ selectedTemplate, content, revisionHistory, templates, u
   return (
     <div className="download-dropdown" ref={menuRef}>
       <button className="download-icon-btn" onClick={() => setIsOpen(!isOpen)}>
-        <span>📥</span> {uiConfig?.navbar.download_btn || "İndir"}
+        <span>📥</span> {uiConfig?.navbar.download_btn || "Download"}
       </button>
       {isOpen && (
         <div className="download-menu-list">
-          <div className="menu-item" onClick={() => handleExport('PDF')}>📄 PDF Olarak Kaydet</div>
-          <div className="menu-item" onClick={() => handleExport('Word')}>📝 Word (.doc) İndir</div>
+          <div className="menu-item" onClick={() => handleExport('PDF')}>📄 Save as PDF</div>
+          <div className="menu-item" onClick={() => handleExport('Word')}>📝 Download Word (.doc)</div>
         </div>
       )}
     </div>

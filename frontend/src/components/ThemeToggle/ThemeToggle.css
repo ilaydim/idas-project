@@ -1,0 +1,47 @@
+/* ThemeToggle.css */
+
+.global-theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    /* Defaults to Glassmorphism Dark Mode style temporarily, 
+     but we'll hook this up to global CSS vars soon */
+    background: var(--dash-card-bg, rgba(20, 22, 35, 0.6));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: var(--text-main, #f8fafc);
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    /* Ensure it stays above everything */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.global-theme-toggle:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(129, 140, 248, 0.15);
+    border-color: rgba(129, 140, 248, 0.4);
+}
+
+/* Light mode specific styling */
+[data-theme='light'] .global-theme-toggle {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+    color: #0f172a;
+}
+
+[data-theme='light'] .global-theme-toggle:hover {
+    background: #ffffff;
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+}

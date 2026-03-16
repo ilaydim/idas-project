@@ -1,6 +1,6 @@
 {
     "user": {
-        "name": "Ilayda Dim",
+        "name": "IDAS",
         "initials": "ID",
         "role": "Lead Analyst"
     },
@@ -14,7 +14,7 @@
         "revisionHistory": [
             {
                 "id": 1,
-                "name": "Ilayda Dim",
+                "name": "IDAS",
                 "date": "24.01.2026",
                 "reason": "Initial Setup",
                 "version": "0.1"

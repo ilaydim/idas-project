@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import DownloadMenu from "../../components/DownloadMenu/DownloadMenu";
 import DocumentStructure from "./components/DocumentStructure";
 import AIAssistant from "./components/AIAssistant";
+import idasLogo from "../../assets/images/icon.png";
 import "./AuthoringPage.css";
 import { supabase } from "../../utils/supabase";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ const AuthoringPage = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [templates, setTemplates] = useState({});
   const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const [revisionHistory, setRevisionHistory] = useState([]);
   const [user, setUser] = useState({ name: "", initials: "" });
@@ -27,16 +29,20 @@ const AuthoringPage = () => {
   const [uiConfig, setUiConfig] = useState(null);
   const lastAnalyzedText = useRef(""); // İstekleri frenlemek için hafıza
   const [activeHighlightId, setActiveHighlightId] = useState(null);
+  const [isRewriting, setIsRewriting] = useState(null);
 
   // --- ŞABLONLARI ÇEKME (BU BLOĞU GÜNCELLE) ---
   useEffect(() => {
     const fetchData = async () => {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8001";
       try {
-        const tResp = await fetch("http://localhost:8088/templates");
+        console.log("Starting fetchData in AuthoringPage...");
+        const tResp = await fetch(`${API_BASE}/templates`);
         const tData = await tResp.json();
+        console.log("Fetched templates: ", Object.keys(tData));
         setTemplates(tData);
 
-        const cResp = await fetch("http://localhost:8088/ui-config");
+        const cResp = await fetch(`${API_BASE}/ui-config`);
         const cData = await cResp.json();
         setUiConfig(cData);
 
@@ -60,17 +66,19 @@ const AuthoringPage = () => {
             setActiveSection("toc");
           }
         } else {
+          console.log("No docId, fetching session logic");
           // Yeni dökümansa eski local session mantığı kalsın
-          const sResp = await fetch("http://localhost:8088/session");
+          const sResp = await fetch(`${API_BASE}/session`);
           const sData = await sResp.json();
           setMessages(sData.document.messages);
           setRevisionHistory(sData.document.revisionHistory);
           setContent(sData.document.content);
-          setUser(sData.user);
         }
       } catch (error) {
-        console.error("Data fetch error:", error);
+        console.error("Data fetch error in AuthoringPage:", error);
+        setFetchError(error.toString());
       } finally {
+        console.log("Setting isLoadingTemplates to false");
         setIsLoadingTemplates(false);
       }
     };
@@ -91,29 +99,31 @@ const AuthoringPage = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      
+
       if (authUser) {
         // İsim metadata'da varsa al, yoksa email'in @'ten önceki kısmını al
         const fullName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || authUser.email.split('@')[0];
-        
+
         // Baş harfleri hesapla (Örn: "İlayda Dim" -> "İD")
         const nameParts = fullName.split(' ').filter(part => part.length > 0);
         let calculatedInitials = "US"; // Varsayılan
-        
+
         if (nameParts.length >= 2) {
           calculatedInitials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
         } else if (nameParts.length === 1) {
           calculatedInitials = nameParts[0].substring(0, 2).toUpperCase();
         }
 
-        setUser({ name: fullName, initials: calculatedInitials });
+        const avatarUrl = authUser.user_metadata?.avatar_url || null;
+
+        setUser({ name: fullName, initials: calculatedInitials, avatarUrl });
       }
     };
 
     fetchCurrentUser();
   }, []);
 
-// --- OTOMATİK ANALİZ (AKILLI DEBOUNCE) ---
+  // --- OTOMATİK ANALİZ (AKILLI DEBOUNCE) ---
   useEffect(() => {
     const currentText = content[activeSection];
 
@@ -125,20 +135,20 @@ const AuthoringPage = () => {
 
     // Ekranda değişiklik yoksa API'ye boşuna gitme!
     if (currentText === lastAnalyzedText.current) {
-      return; 
+      return;
     }
 
-    // Bekleme süresini 6 saniyeden 10 saniyeye çıkardık.
     const timer = setTimeout(async () => {
       setIsAnalyzing(true);
       try {
-        const response = await fetch("http://localhost:8088/analyze", {
+        const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8001";
+        const response = await fetch(`${API_BASE}/analyze`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ req_id: activeSection, text: currentText })
         });
         const data = await response.json();
-        
+
         const rawResults = Array.isArray(data) ? data : (data.result || []);
 
         if (Array.isArray(rawResults)) {
@@ -148,13 +158,13 @@ const AuthoringPage = () => {
             id: res.req_id || `${activeSection}-${index}`
           }));
           setAnalysisResults(resultsWithIds);
-          
+
           // BAŞARILI: Bu metni hafızaya al ki aynı metin için bir daha istek atmasın
-          lastAnalyzedText.current = currentText; 
+          lastAnalyzedText.current = currentText;
         } else {
           setAnalysisResults([]);
         }
-        
+
       } catch (error) {
         console.error("Analysis error:", error);
       } finally {
@@ -166,6 +176,17 @@ const AuthoringPage = () => {
   }, [content[activeSection], activeSection]);
 
   // --- FONKSİYONLAR ---
+  const handleLogout = async () => {
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (!confirmed) return;
+    try {
+      await supabase.auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout error:", error.message);
+    }
+  };
+
   const handleTemplateSelect = (tempKey) => {
     setSelectedTemplate(tempKey);
     setIsTemplateLocked(true);
@@ -173,18 +194,18 @@ const AuthoringPage = () => {
   };
 
   const handleGoBackToSelection = () => {
-      // 1. URL'deki ID parametresini temizle ki refresh atınca tekrar yüklenmesin
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.delete('id');
-      window.history.pushState({}, '', newUrl.href);
+    // 1. URL'deki ID parametresini temizle ki refresh atınca tekrar yüklenmesin
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete('id');
+    window.history.pushState({}, '', newUrl.href);
 
-      // 2. State'leri sıfırla ve seçim ekranına dön
-      setIsTemplateLocked(false);
-      setSelectedTemplate(null);
-      setContent({});
-      setProgress(0);
-      setActiveSection("");
-    };
+    // 2. State'leri sıfırla ve seçim ekranına dön
+    setIsTemplateLocked(false);
+    setSelectedTemplate(null);
+    setContent({});
+    setProgress(0);
+    setActiveSection("");
+  };
 
   const handleGoToDashboard = () => {
     // 1. İçerideki tüm state'leri güvenli bir şekilde sıfırla
@@ -195,7 +216,7 @@ const AuthoringPage = () => {
     setActiveSection("");
 
     // 2. Sadece React Router kullanarak yönlendirme yap
-    navigate('/dashboard'); 
+    navigate('/dashboard');
   };
 
   const addRevisionRow = () => {
@@ -217,16 +238,70 @@ const AuthoringPage = () => {
 
   // AuthoringPage.jsx içinde onDrop fonksiyonunu bununla değiştir:
   const onDrop = (e) => {
-      e.preventDefault();
-      setIsDraggingOver(false);
-      
-      // Karttan gelen metni alıyoruz
-      const droppedText = e.dataTransfer.getData("text/plain");
-      
-      if (droppedText) {
-          // Bu satır, metni doğrudan chat input kutusuna yazar
-          setChatInput(droppedText);
+    e.preventDefault();
+    setIsDraggingOver(false);
+
+    // Karttan gelen metni alıyoruz
+    const droppedText = e.dataTransfer.getData("text/plain");
+
+    if (droppedText) {
+      // Bu satır, metni doğrudan chat input kutusuna yazar
+      setChatInput(droppedText);
+    }
+  };
+
+  // --- AI SUGGESTION UYGULAMA ---
+  const handleApplySuggestion = async (resultIndex) => {
+    const result = analysisResults[resultIndex];
+    if (!result || !result.suggestion) return;
+
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8001";
+    setIsRewriting(resultIndex);
+
+    try {
+      const response = await fetch(`${API_BASE}/rewrite`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: result.original_text || result.message || "",
+          issue: result.message || "",
+          suggestion: result.suggestion || ""
+        })
+      });
+      const data = await response.json();
+      const rewrittenText = data.result || result.suggestion;
+
+      // Hata kontrolü
+      if (rewrittenText && rewrittenText.includes("Error rewriting requirement:")) {
+        alert("The AI service is currently unavailable or has reached its quota limit. Please try again later.\n\n" + rewrittenText);
+        return;
       }
+
+      // Editördeki metni güncelle: orijinal metni AI'ın yazdığıyla değiştir
+      if (activeSection && content[activeSection] && result.original_text) {
+        const updatedContent = content[activeSection].replace(result.original_text, rewrittenText);
+        setContent({ ...content, [activeSection]: updatedContent });
+      }
+
+      // Analysis kartını güncelle
+      setAnalysisResults(prev => prev.map((r, idx) => {
+        if (idx === resultIndex) {
+          return {
+            ...r,
+            fixedByAI: true,
+            originalText: r.original_text || r.message,
+            aiText: rewrittenText
+          };
+        }
+        return r;
+      }));
+
+    } catch (e) {
+      console.error("Error during rewrite:", e);
+      alert("A network error occurred while trying to contact the AI service.");
+    } finally {
+      setIsRewriting(null);
+    }
   };
 
   const handleSaveDraft = async () => {
@@ -235,7 +310,7 @@ const AuthoringPage = () => {
     try {
       setIsAnalyzing(true); // Lazer animasyonunu başlat
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      
+
       if (!authUser) return alert("Lütfen giriş yapın.");
 
       const params = new URLSearchParams(window.location.search);
@@ -245,7 +320,7 @@ const AuthoringPage = () => {
         user_id: authUser.id,
         title: templates[selectedTemplate]?.title || "Untitled SRS",
         template_key: selectedTemplate,
-        content: content, 
+        content: content,
         revision_history: revisionHistory, // Buradaki alt tireli isim SQL ile aynı olmalı
         progress: progress,
         status: "draft",
@@ -277,123 +352,141 @@ const AuthoringPage = () => {
     <div className="auth-master-container">
       {/* 1. ÜST NAVBAR */}
       <header className="auth-modern-nav">
-              <div className="nav-group-left">
-                {/* Akıllı Geri Butonu */}
-                <button 
-                  className="nav-back-pill" 
-                  onClick={() => isTemplateLocked ? handleGoBackToSelection() : handleGoToDashboard()}
-                >
-                  <span className="back-arrow">‹</span> 
-                  {isTemplateLocked ? "Şablon Seçimi" : "Dashboard"}
-                </button>
-                
-                <div className="nav-breadcrumb">
-                  <span
-                    className={`breadcrumb-clickable ${isTemplateLocked ? 'active' : ''}`}
-                    onClick={isTemplateLocked ? handleGoBackToSelection : null}
-                  >
-                    {uiConfig?.navbar.mode_title || "Authoring Mode"}
-                  </span>
-                  {isTemplateLocked && templates[selectedTemplate] && (
-                    <>
-                      <span className="path-divider">/</span>
-                      <span className="active-template-name">{templates[selectedTemplate].title}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="nav-group-right">
-                {/* Sadece Editör modundaysak Save butonu ve Progress görünür */}
-                {isTemplateLocked && (
-                  <>
-                    <DownloadMenu
-                      selectedTemplate={selectedTemplate}
-                      content={content}
-                      revisionHistory={revisionHistory}
-                      templates={templates}
-                      uiConfig={uiConfig}
-                    />
-                    <div className="circular-progress-box">
-                      <svg viewBox="0 0 36 36" className="circular-chart">
-                        <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path className="circle" strokeDasharray={`${progress}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                      </svg>
-                      <span className="prog-number">%{progress}</span>
-                    </div>
-                    <button 
-                      className={`nav-save-btn ${isAnalyzing ? 'analyzing' : ''}`} 
-                      onClick={handleSaveDraft}
-                    >
-                      {uiConfig?.navbar.save_btn || "Save Draft"}
-                      <span className="btn-laser-line"></span> 
-                    </button>
-                  </>
-                )}
+        <div className="nav-group-left">
+          <div className="logo-area" onClick={handleGoToDashboard} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <img src={idasLogo} alt="IDAS Logo" className="brand-logo" />
+          </div>
+          <button
+            className="nav-back-pill"
+            onClick={() => isTemplateLocked ? handleGoBackToSelection() : handleGoToDashboard()}
+          >
+            <span className="back-arrow">‹</span>
+            {isTemplateLocked ? "Şablon Seçimi" : "Dashboard"}
+          </button>
 
-                {/* Dinamik Profil: Statik ID yerine artık user.initials geliyor */}
-                <div className="nav-profile-section" onClick={() => navigate('/profile')}>
-                  <span className="nav-user-fullname">{user.name || "User"}</span>
-                  <div className="nav-avatar">{user.initials || "ID"}</div>
-                </div>
+          <div className="nav-breadcrumb">
+            <span
+              className={`breadcrumb-clickable ${isTemplateLocked ? 'active' : ''}`}
+              onClick={isTemplateLocked ? handleGoBackToSelection : null}
+            >
+              {isTemplateLocked ? "Authoring Mode" : "Design the Content, Define the Standard!"}
+            </span>
+            {isTemplateLocked && templates[selectedTemplate] && (
+              <>
+                <span className="path-divider">/</span>
+                <span className="active-template-name">{templates[selectedTemplate].title}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="nav-group-right">
+          {/* Sadece Editör modundaysak Save butonu ve Progress görünür */}
+          {isTemplateLocked && (
+            <>
+              <DownloadMenu
+                selectedTemplate={selectedTemplate}
+                content={content}
+                revisionHistory={revisionHistory}
+                templates={templates}
+                uiConfig={uiConfig}
+              />
+              <div className="circular-progress-box">
+                <svg viewBox="0 0 36 36" className="circular-chart">
+                  <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path className="circle" strokeDasharray={`${progress}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <span className="prog-number">%{progress}</span>
               </div>
-            </header>
+              <button
+                className={`nav-save-btn ${isAnalyzing ? 'analyzing' : ''}`}
+                onClick={handleSaveDraft}
+              >
+                {uiConfig?.navbar.save_btn || "Save Draft"}
+                <span className="btn-laser-line"></span>
+              </button>
+            </>
+          )}
+
+          <div className="nav-profile-section-custom" onClick={() => navigate('/profile')} title="My Profile">
+            <span className="nav-user-fullname-custom">{user.name || "User"}</span>
+            <div className="nav-avatar-rounded-square">
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" />
+              ) : (
+                <span>{user.initials || "US"}</span>
+              )}
+            </div>
+          </div>
+          <button className="nav-icon-btn" onClick={handleLogout} title="Log Out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
 
       {/* 2. ANA İÇERİK ALANI */}
       {!isTemplateLocked ? (
-              /* YENİ ŞABLON SEÇİM EKRANI YAPISI */
-              <div className="template-selection-view">
-                <div className="selection-layout">
-                  
-                  {/* Sol: Rehber/Sidebar Alanı */}
-                  <aside className="selection-guide-aside">
-                    <div className="guide-content-wrapper">
-                      <div className="mode-tag">AI AUTHORING</div>
-                      <h1 className="hero-title">
-                        {uiConfig?.navbar.selection_title || "Start New Document"}
-                      </h1>
-                      <p className="hero-subtitle">
-                        {uiConfig?.navbar.selection_subtitle || "Choose a standard template to start authoring your SRS document."}
-                      </p>
-                      
-                      <div className="guide-features">
-                        <div className="feat-item"><span>✦</span> IEEE 830 / ISO 29148 Support</div>
-                        <div className="feat-item"><span>✦</span> Real-time AI Analysis</div>
-                        <div className="feat-item"><span>✦</span> Automated Draft Saving</div>
-                      </div>
-                    </div>
-                  </aside>
+        /* YENİ ŞABLON SEÇİM EKRANI YAPISI */
+        <div className="template-selection-view">
+          <div className="selection-layout">
 
-                  {/* Sağ: Şablon Kartları */}
-                  <section className="selection-templates-grid">
-                    <div className="grid-header">
-                      <p className="template-grid-label">Available Standards</p>
-                      <div className="header-line-faded"></div>
-                    </div>
-                    
-                    <div className="template-list-container">
-                      {isLoadingTemplates ? (
-                        <div className="loading-state-ui">Loading AI Frameworks...</div>
-                      ) : (
-                        Object.keys(templates).map((key, idx) => {
-                          const icons = ['🌐', '🏢', '📋', '🔬'];
-                          return (
-                            <div key={key} className="template-card-modern" onClick={() => handleTemplateSelect(key)}>
-                              <div className="card-icon-wrap">{icons[idx % icons.length]}</div>
-                              <div className="card-info">
-                                <h3>{templates[key].title}</h3>
-                                <p>{templates[key].description}</p>
-                              </div>
-                              <div className="card-action-arrow"></div>
-                              {/* Soldan sağa tarama (shimmer) efekti için boş div */}
-                              <div className="card-scan-shimmer"></div>
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
-                  </section>
+            {/* Sol: Rehber/Sidebar Alanı */}
+            <aside className="selection-guide-aside">
+              <div className="guide-content-wrapper">
+                <div className="mode-tag">AI AUTHORING</div>
+                <h1 className="hero-title">
+                  {uiConfig?.navbar.selection_title || "Start New Document"}
+                </h1>
+                <p className="hero-subtitle">
+                  {uiConfig?.navbar.selection_subtitle || "Choose a standard template to start authoring your SRS document."}
+                </p>
+
+                <div className="guide-features">
+                  <div className="feat-item"><span>✦</span> IEEE 830 / ISO 29148 Support</div>
+                  <div className="feat-item"><span>✦</span> Real-time AI Analysis</div>
+                  <div className="feat-item"><span>✦</span> Automated Draft Saving</div>
+                  <div className="feat-item"><span>✦</span> Advanced Export Options</div>
                 </div>
               </div>
+            </aside>
+
+            {/* Sağ: Şablon Kartları */}
+            <section className="selection-templates-grid">
+              <div className="grid-header">
+                <p className="template-grid-label">Available Standards</p>
+                <div className="header-line-faded"></div>
+              </div>
+
+              <div className="template-list-container">
+                {fetchError ? (
+                  <div className="loading-state-ui" style={{ color: 'red' }}>Error: {fetchError}</div>
+                ) : isLoadingTemplates ? (
+                  <div className="loading-state-ui">Loading AI Frameworks...</div>
+                ) : (
+                  Object.keys(templates).map((key, idx) => {
+                    const icons = ['🌐', '🏢', '📋', '🔬'];
+                    return (
+                      <div key={key} className="template-card-modern" onClick={() => handleTemplateSelect(key)}>
+                        <div className="card-icon-wrap">{icons[idx % icons.length]}</div>
+                        <div className="card-info">
+                          <h3>{templates[key].title}</h3>
+                          <p>{templates[key].description}</p>
+                        </div>
+                        <div className="card-action-arrow"></div>
+                        {/* Soldan sağa tarama (shimmer) efekti için boş div */}
+                        <div className="card-scan-shimmer"></div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </section>
+          </div>
+        </div>
       ) : (
         /* EDİTÖR GÖRÜNÜMÜ */
         <div className="auth-main-layout">
@@ -476,6 +569,8 @@ const AuthoringPage = () => {
             uiConfig={uiConfig}
             activeHighlightId={activeHighlightId}
             setActiveHighlightId={setActiveHighlightId}
+            onApplySuggestion={handleApplySuggestion}
+            isRewriting={isRewriting}
           />
         </div>
       )}

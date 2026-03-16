@@ -1,9 +1,10 @@
 /* GENEL AYARLAR */
 .landing-wrapper {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f8fafc; /* Çok açık, ferah bir buz grisi */
+  background-color: #f8fafc;
+  /* Çok açık, ferah bir buz grisi */
   min-height: 100vh;
-  color: #0f172a; 
+  color: #0f172a;
   overflow-x: hidden;
 }
 
@@ -29,7 +30,7 @@
 
 /* Logo Büyütüldü */
 .main-logo-img {
-  height: 75px; 
+  height: 75px;
   width: auto;
   transition: transform 0.3s ease;
 }
@@ -47,27 +48,29 @@
 /* Log In Butonu */
 .btn-login-text {
   background: white;
-  border: 1px solid #cbd5e1; 
-  color: #0f172a; 
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
   padding: 10px 24px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   font-size: 15px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
 
 .btn-login-text:hover {
   background: #f8fafc;
-  border-color: #74467D; /* Hover durumunda mürdüm rengi */
+  border-color: #74467D;
+  /* Hover durumunda mürdüm rengi */
   color: #74467D;
   transform: translateY(-1px);
 }
 
 /* Sign Up Navbar Butonu */
 .btn-register-nav {
-  background: #231E53; /* Logonun Koyu Laciverti */
+  background: #231E53;
+  /* Logonun Koyu Laciverti */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -78,7 +81,8 @@
 }
 
 .btn-register-nav:hover {
-  background: #74467D; /* Hover durumunda logonun açık mor/mürdüm rengine geçiş */
+  background: #74467D;
+  /* Hover durumunda logonun açık mor/mürdüm rengine geçiş */
   transform: translateY(-1px);
 }
 
@@ -103,14 +107,16 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(116, 70, 125, 0.08); /* Mürdüm renginin çok hafif transparan hali */
-  color: #74467D; /* Mürdüm */
+  background: rgba(116, 70, 125, 0.08);
+  /* Mürdüm renginin çok hafif transparan hali */
+  color: #74467D;
+  /* Mürdüm */
   padding: 6px 16px;
   border-radius: 20px;
   font-weight: 700;
   font-size: 13px;
   margin-bottom: 24px;
-  border: 1px solid rgba(116, 70, 125, 0.2); 
+  border: 1px solid rgba(116, 70, 125, 0.2);
 }
 
 .hero-title {
@@ -118,7 +124,7 @@
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: 24px;
-  color: #0f172a !important; 
+  color: #0f172a !important;
   letter-spacing: -1px;
 }
 
@@ -131,7 +137,7 @@
 
 .hero-subtitle {
   font-size: 18px;
-  color: #475569; 
+  color: #475569;
   line-height: 1.6;
   margin-bottom: 40px;
 }
@@ -154,13 +160,13 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(35, 30, 83, 0.3); /* Koyu gölge */
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(35, 30, 83, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary-large:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(35, 30, 83, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(116, 70, 125, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .btn-secondary-large {
@@ -193,10 +199,11 @@
 .mock-window {
   width: 100%;
   max-width: 550px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(35, 30, 83, 0.15); /* Logo tonunda gölge */
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 35px 60px -15px rgba(35, 30, 83, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -210,14 +217,28 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot.red { background: #ef4444; }
-.dot.yellow { background: #eab308; }
-.dot.green { background: #22c55e; }
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot.red {
+  background: #ef4444;
+}
+
+.dot.yellow {
+  background: #eab308;
+}
+
+.dot.green {
+  background: #22c55e;
+}
 
 .mock-body {
   padding: 30px;
-  padding-bottom: 40px; /* Alt kısımdan rahat bir boşluk bırakıyoruz */
+  padding-bottom: 40px;
+  /* Alt kısımdan rahat bir boşluk bırakıyoruz */
   background: #f8fafc;
 }
 
@@ -228,28 +249,39 @@
   border-radius: 8px;
   border: 1px dashed #cbd5e1;
   color: #334155;
-  margin-bottom: 25px; /* Kart ile arasındaki mesafeyi açtık */
+  margin-bottom: 25px;
+  /* Kart ile arasındaki mesafeyi açtık */
 }
 
 /* Süzülen Yapay Zeka Hata Kartı */
 .floating-ai-card {
-  position: relative ; /* Başka sayfalardan absolute ayarı sızmasını engeller */
+  position: relative;
+  /* Başka sayfalardan absolute ayarı sızmasını engeller */
   display: block;
   background: white;
   border: 1px solid #e2e8f0;
   border-left: 4px solid #ef4444;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  margin-left: 20px; /* Sağa kaydırma işini transform yerine margin ile yapıyoruz */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  margin-left: 20px;
+  /* Sağa kaydırma işini transform yerine margin ile yapıyoruz */
   animation: landingFloat 4s ease-in-out infinite;
 }
 
 /* Sadece bu sayfaya özel animasyon ismi verdik ki çakışmasın */
 @keyframes landingFloat {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .card-top {
@@ -258,18 +290,44 @@
   margin-bottom: 10px;
 }
 
-.mock-id { font-weight: bold; font-size: 13px; color: #64748b; }
-.mock-badge { background: #fee2e2; color: #ef4444; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; }
-.card-text { font-size: 14px; color: #1e293b; margin-bottom: 10px; }
-.card-suggestion { font-size: 13px; color: #059669; font-weight: 500; border-top: 1px dashed #e2e8f0; padding-top: 10px; }
+.mock-id {
+  font-weight: bold;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.mock-badge {
+  background: #fee2e2;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.card-text {
+  font-size: 14px;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.card-suggestion {
+  font-size: 13px;
+  color: #059669;
+  font-weight: 500;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 10px;
+}
 
 /* ARKADAKİ PARLAMA EFEKTİ (Logonun 2 renginin karışımı) */
 .glow-blob {
   position: absolute;
-  width: 400px;
-  height: 400px;
-  background: linear-gradient(135deg, rgba(116, 70, 125, 0.25) 0%, rgba(35, 30, 83, 0.15) 100%);
-  filter: blur(80px);
+  width: 500px;
+  /* Büyütüldü */
+  height: 500px;
+  background: linear-gradient(135deg, rgba(116, 70, 125, 0.3) 0%, rgba(35, 30, 83, 0.2) 100%);
+  filter: blur(120px);
+  /* Daha soft geçiş */
   border-radius: 50%;
   z-index: 1;
   top: 50%;
@@ -288,19 +346,22 @@
 }
 
 .feature-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
   padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   flex: 1;
   max-width: 350px;
-  transition: transform 0.2s, border-color 0.2s;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(116, 70, 125, 0.4); /* Hover durumunda mürdüm vurgusu */
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(116, 70, 125, 0.3);
+  box-shadow: 0 20px 40px rgba(35, 30, 83, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .f-icon {
@@ -311,7 +372,8 @@
 .feature-card h3 {
   font-size: 18px;
   margin-bottom: 12px;
-  color: #231E53; /* Başlıklar logodaki koyu lacivert */
+  color: #231E53;
+  /* Başlıklar logodaki koyu lacivert */
 }
 
 .feature-card p {
@@ -327,14 +389,39 @@
     text-align: center;
     padding: 40px 5%;
   }
-  .hero-eyebrow { margin: 0 auto 24px; }
-  .hero-title { font-size: 36px; }
-  .hero-buttons { justify-content: center; }
-  .landing-features { flex-direction: column; align-items: center; }
-  .floating-ai-card { transform: translateX(0); }
+
+  .hero-eyebrow {
+    margin: 0 auto 24px;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .landing-features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .floating-ai-card {
+    transform: translateX(0);
+  }
+
   @keyframes float {
-    0% { transform: translateY(0px) translateX(0); }
-    50% { transform: translateY(-10px) translateX(0); }
-    100% { transform: translateY(0px) translateX(0); }
+    0% {
+      transform: translateY(0px) translateX(0);
+    }
+
+    50% {
+      transform: translateY(-10px) translateX(0);
+    }
+
+    100% {
+      transform: translateY(0px) translateX(0);
+    }
   }
 }

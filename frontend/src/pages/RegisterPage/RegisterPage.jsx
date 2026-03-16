@@ -9,40 +9,40 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      try {
-        // 1. Supabase ile kayıt işlemini başlat
-        const { data, error } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: {
-            data: {
-              full_name: formData.name, // İsmi metadata olarak kaydediyoruz
-            },
+    e.preventDefault();
+
+    try {
+      // 1. Supabase ile kayıt işlemini başlat
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name, // İsmi metadata olarak kaydediyoruz
           },
-        });
+        },
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data) {
-          alert("Registration successful! Please check your email for confirmation.");
-          navigate("/login");
-        }
-      } catch (error) {
-        alert("Registration failed: " + error.message);
-        console.error("Error details:", error);
+      if (data) {
+        alert("Registration successful! Please check your email for confirmation.");
+        navigate("/login");
       }
-    };
+    } catch (error) {
+      alert("Registration failed: " + error.message);
+      console.error("Error details:", error);
+    }
+  };
 
   return (
     <div className="register-container">
       {/* --- SOL PANEL: CANLI ANALİZ KARTLARI --- */}
       <div className="register-brand-side">
-        
+
         {/* SÜZÜLEN AI KARTLARI KONTEYNERİ (10 Kart) */}
         <div className="floating-cards-container">
-          
+
           {/* KART 1: Not Specific */}
           <div className="floating-ai-card card-pos-1">
             <div className="card-top">
@@ -152,7 +152,7 @@ const RegisterPage = () => {
       {/* --- SAĞ PANEL: FORM ALANI --- */}
       <div className="register-form-side">
         <div className="form-wrapper">
-          
+
           <div className="form-logo-center" onClick={() => navigate("/")}>
             <img src={idasLogo} alt="IDAS Logo" />
           </div>
@@ -171,6 +171,8 @@ const RegisterPage = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
+                onInvalid={(e) => e.target.setCustomValidity('Please fill in this field.')}
+                onInput={(e) => e.target.setCustomValidity('')}
               />
             </div>
 
@@ -182,6 +184,8 @@ const RegisterPage = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
+                onInvalid={(e) => e.target.setCustomValidity('Please fill in this field.')}
+                onInput={(e) => e.target.setCustomValidity('')}
               />
             </div>
 
@@ -193,6 +197,8 @@ const RegisterPage = () => {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
+                onInvalid={(e) => e.target.setCustomValidity('Please fill in this field.')}
+                onInput={(e) => e.target.setCustomValidity('')}
               />
             </div>
 

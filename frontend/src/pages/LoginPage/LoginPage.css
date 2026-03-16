@@ -3,6 +3,8 @@
   min-height: 100vh;
   width: 100vw;
   background: #ffffff;
+  color: #0f172a;
+  /* Force dark text regardless of global theme */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow: hidden;
 }
@@ -28,7 +30,8 @@
 
 .login-visual-text h2 {
   color: white;
-  font-size: 42px; /* Register ile aynı boy */
+  font-size: 42px;
+  /* Register ile aynı boy */
   font-weight: 800;
   margin-bottom: 15px;
 }
@@ -45,32 +48,62 @@
   max-width: 500px;
   background: rgba(15, 23, 42, 0.9);
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   z-index: 5;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
 }
 
 .console-nav {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   padding: 12px 20px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.c-dot { width: 10px; height: 10px; border-radius: 50%; }
-.c-dot.r { background: #ff5f56; }
-.c-dot.y { background: #ffbd2e; }
-.c-dot.g { background: #27c93f; }
+.c-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
 
-.c-title { margin-left: auto; color: #475569; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.c-dot.r {
+  background: #ff5f56;
+}
 
-.console-content { padding: 40px; position: relative; }
+.c-dot.y {
+  background: #ffbd2e;
+}
 
-.console-line { color: #e2e8f0; font-family: monospace; font-size: 16px; margin-bottom: 25px; }
+.c-dot.g {
+  background: #27c93f;
+}
 
-.c-bad { color: #f87171; text-decoration: underline; }
+.c-title {
+  margin-left: auto;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.console-content {
+  padding: 40px;
+  position: relative;
+}
+
+.console-line {
+  color: #e2e8f0;
+  font-family: monospace;
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.c-bad {
+  color: #f87171;
+  text-decoration: underline;
+}
 
 .console-fix-popup {
   background: rgba(116, 70, 125, 0.2);
@@ -80,9 +113,21 @@
   animation: consoleFade 4s infinite;
 }
 
-.c-fix-title { color: #d8b4e2; font-size: 12px; font-weight: bold; margin-bottom: 6px; }
-.c-fix-body { color: white; font-size: 14px; }
-.c-good { color: #4ade80; }
+.c-fix-title {
+  color: #d8b4e2;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.c-fix-body {
+  color: white;
+  font-size: 14px;
+}
+
+.c-good {
+  color: #4ade80;
+}
 
 .console-scanner-line {
   position: absolute;
@@ -95,16 +140,42 @@
 }
 
 @keyframes consoleScan {
-  0% { top: 0; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 @keyframes consoleFade {
-  0%, 45% { opacity: 0; transform: translateY(10px); }
-  55%, 95% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; }
+
+  0%,
+  45% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  55%,
+  95% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 /* SAĞ PANEL - Register Stili Birebir Aynı */
@@ -118,7 +189,8 @@
 
 .login-form-container {
   width: 100%;
-  max-width: 420px; /* Register ile aynı genişlik */
+  max-width: 420px;
+  /* Register ile aynı genişlik */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -132,22 +204,49 @@
 }
 
 .login-logo-holder img {
-  height: 140px; /* Dev Logo */
+  height: 140px;
+  /* Dev Logo */
   width: auto;
 }
 
-.login-welcome-msg { text-align: center; margin-bottom: 35px; }
-.login-welcome-msg h1 { font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+.login-welcome-msg {
+  text-align: center;
+  margin-bottom: 35px;
+}
 
-.login-main-form { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+.login-welcome-msg h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
 
-.login-input-field label { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; display: block; }
+.login-welcome-msg p {
+  color: #64748b;
+}
+
+.login-main-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-input-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+  display: block;
+}
+
 .login-input-field input {
   width: 100%;
   padding: 15px;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   background: #f8fafc;
+  color: #0f172a;
   font-size: 15px;
 }
 
@@ -158,8 +257,18 @@
   box-shadow: 0 0 0 4px rgba(35, 30, 83, 0.1);
 }
 
-.login-helper-text { display: flex; justify-content: center; margin-top: -10px; }
-.login-helper-text span { font-size: 13px; color: #74467D; font-weight: 600; cursor: pointer; }
+.login-helper-text {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.login-helper-text span {
+  font-size: 13px;
+  color: #74467D;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 .login-submit-btn {
   width: 100%;
@@ -174,9 +283,25 @@
   cursor: pointer;
 }
 
-.login-submit-btn:hover { background: #74467D; transform: translateY(-2px); }
+.login-submit-btn:hover {
+  background: #74467D;
+  transform: translateY(-2px);
+}
 
-.login-switch-page { margin-top: 30px; text-align: center; color: #64748b; }
-.login-switch-page span { color: #74467D; font-weight: 700; cursor: pointer; }
+.login-switch-page {
+  margin-top: 30px;
+  text-align: center;
+  color: #64748b;
+}
 
-@media (max-width: 950px) { .login-visual-section { display: none; } }
+.login-switch-page span {
+  color: #74467D;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 950px) {
+  .login-visual-section {
+    display: none;
+  }
+}

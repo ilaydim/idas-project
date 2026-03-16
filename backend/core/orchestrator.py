@@ -8,6 +8,7 @@ from backend.agents.quality_agent import QualityAgent
 from backend.agents.resolution_agent import ResolutionAgent
 from backend.agents.chat_agent import ChatAgent
 from backend.agents.review_agent import ReviewAgent
+from backend.agents.rewrite_agent import RewriteAgent
 
 class Orchestrator(BaseAgent):
     def __init__(self, model_name=None):
@@ -22,9 +23,10 @@ class Orchestrator(BaseAgent):
         self.resolution_agent = ResolutionAgent(model_name)
         self.chat_agent = ChatAgent(model_name)
         self.review_agent = ReviewAgent(model_name)
+        self.rewrite_agent = RewriteAgent(model_name)
 
     # DİKKAT: req_id=None parametresini ekledik
-    def process(self, input_text, task_type="analyze", req_id=None):
+    def process(self, input_text, task_type="analyze", req_id=None, **kwargs):
         """
         Route the task to the appropriate agent.
         """
@@ -50,6 +52,12 @@ class Orchestrator(BaseAgent):
             return self.chat_agent.process(input_text)
         elif task_type == "review":
             return self.review_agent.process(input_text)
+        elif task_type == "rewrite":
+            return self.rewrite_agent.process(
+                original_text=input_text, 
+                issue=kwargs.get("issue", ""), 
+                suggestion=kwargs.get("suggestion", "")
+            )
         else:
             return "Unknown task type."
 

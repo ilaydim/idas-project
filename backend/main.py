@@ -20,6 +20,11 @@ orchestrator = Orchestrator()
 class AnalysisRequest(BaseModel):
     text: str
 
+class RewriteRequest(BaseModel):
+    text: str
+    issue: str
+    suggestion: str
+
 @app.get("/")
 def read_root():
     return {"message": "IDAS Backend is running"}
@@ -110,5 +115,15 @@ async def upload_review(file: UploadFile = File(...)):
         return result
     except Exception as e:
         return {"error": str(e)}
+
+@app.post("/rewrite")
+def rewrite_requirement(request: RewriteRequest):
+    result = orchestrator.process(
+        request.text, 
+        task_type="rewrite", 
+        issue=request.issue, 
+        suggestion=request.suggestion
+    )
+    return {"result": result}
 
 

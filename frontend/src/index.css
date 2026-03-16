@@ -2,14 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* GLOBAL THEME VARIABLES - LIGHT MODE DEFAULTS */
+  --bg-primary: #f8fafc;
+  --bg-secondary: rgba(255, 255, 255, 0.65);
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-primary: #818cf8;
+  --accent-secondary: #c084fc;
+  --border-glass: rgba(255, 255, 255, 0.8);
+  --shadow-glass: 0 10px 30px rgba(15, 23, 42, 0.05);
+
+  --grid-color: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme='dark'] {
+  /* GLOBAL THEME VARIABLES - DARK MODE */
+  --bg-primary: #090a0f;
+  --bg-secondary: rgba(20, 22, 35, 0.6);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-primary: #818cf8;
+  --accent-secondary: #c084fc;
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+  --grid-color: rgba(255, 255, 255, 0.03);
+}
+
 @layer base {
   body {
-    background-color: #f1f5f9;
+    background-color: var(--bg-primary);
     background-image:
-      linear-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 30px 30px;
-    @apply text-slate-900 antialiased font-sans;
+    color: var(--text-primary);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    @apply antialiased font-sans;
   }
 }
 

@@ -1,39 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-import idasLogo from "../../assets/images/icon.png"; 
+import idasLogo from "../../assets/images/icon.png";
 import { supabase } from "../../utils/supabase";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      try {
-        // Supabase ile giriş yapıyoruz
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
-
-        if (error) {
-          // Eğer giriş hatalıysa (şifre yanlış vb.) kullanıcıya bildir
-          alert("Giriş hatası: " + error.message);
-          return;
-        }
-
-        if (data.user) {
-          // Giriş başarılı! Şimdi Dashboard'a uçuyoruz
-          console.log("Giriş başarılı, Dashboard'a yönlendiriliyor...");
-          navigate("/dashboard");
-        }
-      } catch (err) {
-        console.error("Beklenmedik bir hata oluştu:", err);
-        alert("Bir şeyler ters gitti, lütfen tekrar dene.");
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) {
+        console.log("Already logged in, redirecting to Dashboard...");
+        navigate("/dashboard");
       }
     };
+    checkAuth();
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Supabase ile giriş yapıyoruz
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) {
+        alert("Login error: " + error.message);
+        return;
+      }
+
+      if (data.user) {
+        console.log("Login successful, redirecting to Dashboard...");
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error("An unexpected error occurred:", err);
+      alert("Something went wrong, please try again.");
+    }
+  };
 
   return (
     <div className="login-page-wrapper">
@@ -58,7 +67,7 @@ const LoginPage = () => {
             <div className="console-fix-popup">
               <div className="c-fix-title">✨ AI REFINEMENT</div>
               <div className="c-fix-body">
-                The interface <span className="c-good">must adhere to WCAG 2.1 accessibility standards</span>.
+                The interface <span className="c-good">shall adhere to WCAG 2.1 accessibility standards</span>.
               </div>
             </div>
             <div className="console-scanner-line"></div>
@@ -70,7 +79,7 @@ const LoginPage = () => {
       {/* SAĞ TARAF: Register Sayfasıyla Aynı Stil ve Yerleşim */}
       <div className="login-form-section">
         <div className="login-form-container">
-          
+
           <div className="login-logo-holder" onClick={() => navigate("/")}>
             <img src={idasLogo} alt="IDAS Logo" />
           </div>
@@ -83,28 +92,32 @@ const LoginPage = () => {
           <form className="login-main-form" onSubmit={handleSubmit}>
             <div className="login-input-field">
               <label>Email Address</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 placeholder="name@company.com"
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                required 
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                onInvalid={(e) => e.target.setCustomValidity('Please fill in this field.')}
+                onInput={(e) => e.target.setCustomValidity('')}
               />
             </div>
 
             <div className="login-input-field">
               <label>Password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 placeholder="••••••••"
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
-                required 
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+                onInvalid={(e) => e.target.setCustomValidity('Please fill in this field.')}
+                onInput={(e) => e.target.setCustomValidity('')}
               />
             </div>
 
             <div className="login-helper-text">
-              <span onClick={() => console.log("Reset")}>Forgot password?</span>
+              <span onClick={() => navigate("/forgot-password")}>Forgot password?</span>
             </div>
 
             <button type="submit" className="login-submit-btn">Sign In</button>

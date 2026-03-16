@@ -17,6 +17,7 @@ class ChatAgent(BaseAgent):
         2. If the user asks about something unrelated to software engineering or requirements, 
            politely guide them back to the topic.
         3. Provide actionable advice whenever possible.
+        4. CRITICAL: Always respond in English, regardless of the language the user speaks.
 
         Please provide a natural and helpful response.
         """
@@ -25,4 +26,7 @@ class ChatAgent(BaseAgent):
             response = self.model.generate_content(prompt)
             return response.text
         except Exception as e:
-            return f"Error in chat processing: {str(e)}"
+            error_msg = str(e)
+            if "429" in error_msg or "quota" in error_msg.lower():
+                return "The AI service is currently busy or has reached its quota limit. Please wait about a minute and try again."
+            return f"Error in chat processing: {error_msg}"
