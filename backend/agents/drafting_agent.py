@@ -6,7 +6,7 @@ class DraftingAgent(BaseAgent):
         Generate draft requirement sentences based on the provided context.
         """
         prompt = f"""
-        You are an expert Requirements Engineer using the HAVELSAN style guide.
+        You are an expert Requirements Engineer using the IEEE 29148 style guide.
         
         Context/Topic:
         "{context_text}"

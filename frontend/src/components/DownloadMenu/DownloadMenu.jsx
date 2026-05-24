@@ -1,85 +1,205 @@
 import React, { useState, useRef, useEffect } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import "./DownloadMenu.css";
 
+const API_BASE = "http://localhost:8000";
+
 const DownloadMenu = ({ selectedTemplate, content, revisionHistory, templates, uiConfig }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen]     = useState(false);
+  const [loading, setLoading]   = useState(null); // 'PDF' | 'DOCX' | null
   const menuRef = useRef(null);
 
-  // Menü dışına tıklandığında kapatma
+  // Close on outside click
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) setIsOpen(false);
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setIsOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleExport = (format) => {
-    setIsOpen(false);
-    const templateData = templates[selectedTemplate];
-    if (!templateData) return;
-    const docTitle = templateData.title;
+  // ── Helpers ────────────────────────────────────────────────────────────────
 
-    // --- İÇERİK BİRLEŞTİRME (Sıralı ve Temiz) ---
-    let htmlContent = `
-      <h1>${docTitle}</h1>
-      <h3>Revision History</h3>
-      <table border="1" style="width:100%; border-collapse: collapse;">
-        <thead>
-          <tr><th>Version</th><th>Date</th><th>Author</th><th>Reason</th></tr>
-        </thead>
-        <tbody>
-          ${revisionHistory.map(r => `
-            <tr>
-              <td>${r.version || "-"}</td>
-              <td>${r.date || "-"}</td>
-              <td>${r.name || "-"}</td>
-              <td>${r.reason || "-"}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
+  const getTemplateData = () => templates?.[selectedTemplate];
 
-    templateData.sections.forEach(sec => {
-      const text = content[sec.id] || "This section has not been filled out yet.";
-      htmlContent += `<h2>${sec.title}</h2><p style="white-space: pre-wrap;">${text}</p>`;
+  /** Build an off-screen HTML element containing the full document */
+  const buildPrintContainer = (templateData) => {
+    const container = document.createElement("div");
+    container.style.cssText =
+      "position:fixed;left:-9999px;top:0;width:794px;padding:60px;background:#fff;font-family:Georgia,serif;color:#111;line-height:1.7;";
+
+    // Title
+    const h1 = document.createElement("h1");
+    h1.textContent = templateData.title;
+    h1.style.cssText = "font-size:24px;font-weight:700;text-align:center;margin-bottom:8px;";
+    container.appendChild(h1);
+
+    const divider = document.createElement("hr");
+    divider.style.cssText = "border:none;border-top:2px solid #333;margin:12px 0 24px;";
+    container.appendChild(divider);
+
+    // Revision History
+    const revTitle = document.createElement("h2");
+    revTitle.textContent = "Revision History";
+    revTitle.style.cssText = "font-size:15px;margin-bottom:6px;";
+    container.appendChild(revTitle);
+
+    const table = document.createElement("table");
+    table.style.cssText = "width:100%;border-collapse:collapse;font-size:12px;margin-bottom:28px;";
+    const thead = `<thead><tr style="background:#222;color:#fff;">
+      <th style="padding:6px 8px;text-align:left;">Version</th>
+      <th style="padding:6px 8px;text-align:left;">Date</th>
+      <th style="padding:6px 8px;text-align:left;">Author</th>
+      <th style="padding:6px 8px;text-align:left;">Reason</th>
+    </tr></thead>`;
+    const rows = (revisionHistory || []).map((r, i) =>
+      `<tr style="background:${i % 2 === 0 ? "#f9f9f9" : "#fff"};">
+        <td style="padding:5px 8px;border:1px solid #ddd;">${r.version || "-"}</td>
+        <td style="padding:5px 8px;border:1px solid #ddd;">${r.date || "-"}</td>
+        <td style="padding:5px 8px;border:1px solid #ddd;">${r.name || "-"}</td>
+        <td style="padding:5px 8px;border:1px solid #ddd;">${r.reason || "-"}</td>
+      </tr>`
+    ).join("");
+    table.innerHTML = thead + `<tbody>${rows}</tbody>`;
+    container.appendChild(table);
+
+    // Sections
+    (templateData.sections || []).forEach((sec, idx) => {
+      const h2 = document.createElement("h2");
+      h2.textContent = `${idx + 1}. ${sec.title}`;
+      h2.style.cssText = "font-size:16px;font-weight:700;margin:24px 0 6px;border-bottom:1px solid #ccc;padding-bottom:4px;";
+      container.appendChild(h2);
+
+      const p = document.createElement("p");
+      p.style.cssText = "font-size:13px;white-space:pre-wrap;margin:0 0 12px;";
+      p.textContent = content?.[sec.id]?.trim() || "This section has not been filled out yet.";
+      container.appendChild(p);
     });
 
-    if (format === 'PDF') {
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <html>
-          <head><title>${docTitle}</title><style>body{font-family:sans-serif; padding:40px; line-height:1.6;}</style></head>
-          <body>${htmlContent}</body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    } else {
-      // Word Dosyası Oluşturma (.doc)
-      const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
-      const footer = "</body></html>";
-      const sourceHTML = header + htmlContent + footer;
+    // Footer
+    const footer = document.createElement("p");
+    footer.style.cssText = "margin-top:48px;text-align:center;font-size:11px;color:#777;";
+    footer.textContent = `Generated by IDAS  •  ${new Date().toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}`;
+    container.appendChild(footer);
 
-      const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${docTitle.replace(/\s+/g, '_')}.doc`;
-      link.click();
+    return container;
+  };
+
+  // ── Export PDF ─────────────────────────────────────────────────────────────
+
+  const exportPDF = async () => {
+    setIsOpen(false);
+    const templateData = getTemplateData();
+    if (!templateData) return;
+
+    setLoading("PDF");
+    try {
+      const container = buildPrintContainer(templateData);
+      document.body.appendChild(container);
+
+      const canvas = await html2canvas(container, { scale: 2, useCORS: true });
+      document.body.removeChild(container);
+
+      const imgData   = canvas.toDataURL("image/png");
+      const pdf       = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight= pdf.internal.pageSize.getHeight();
+      const imgWidth  = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let yPos = 0;
+      let heightLeft = imgHeight;
+
+      pdf.addImage(imgData, "PNG", 0, yPos, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        yPos -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, yPos, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const safeName = templateData.title.replace(/\s+/g, "_");
+      pdf.save(`${safeName}.pdf`);
+    } catch (err) {
+      console.error("PDF export error:", err);
+      alert("PDF oluşturulurken bir hata oluştu.");
+    } finally {
+      setLoading(null);
     }
   };
 
+  // ── Export DOCX ────────────────────────────────────────────────────────────
+
+  const exportDocx = async () => {
+    setIsOpen(false);
+    const templateData = getTemplateData();
+    if (!templateData) return;
+
+    setLoading("DOCX");
+    try {
+      const payload = {
+        doc_title: templateData.title,
+        sections: (templateData.sections || []).map((s) => ({ id: s.id, title: s.title })),
+        content: content || {},
+        revision_history: (revisionHistory || []).map((r) => ({
+          version: r.version || "-",
+          date:    r.date    || "-",
+          name:    r.name    || "-",
+          reason:  r.reason  || "-",
+        })),
+      };
+
+      const response = await fetch(`${API_BASE}/export-docx`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+      const blob = await response.blob();
+      const url  = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href     = url;
+      link.download = `${templateData.title.replace(/\s+/g, "_")}.docx`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("DOCX export error:", err);
+      alert("DOCX oluşturulurken bir hata oluştu. Backend'in çalıştığından emin olun.");
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
   return (
     <div className="download-dropdown" ref={menuRef}>
-      <button className="download-icon-btn" onClick={() => setIsOpen(!isOpen)}>
-        <span>📥</span> {uiConfig?.navbar.download_btn || "Download"}
+      <button
+        className="download-icon-btn"
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={!!loading}
+      >
+        {loading ? (
+          <span className="spinner" />
+        ) : (
+          <span>📥</span>
+        )}
+        {loading ? `Generating ${loading}…` : (uiConfig?.navbar?.download_btn || "Download")}
       </button>
+
       {isOpen && (
         <div className="download-menu-list">
-          <div className="menu-item" onClick={() => handleExport('PDF')}>📄 Save as PDF</div>
-          <div className="menu-item" onClick={() => handleExport('Word')}>📝 Download Word (.doc)</div>
+          <div className="menu-item" onClick={exportPDF}>
+            📄 Save as PDF
+          </div>
+          <div className="menu-item" onClick={exportDocx}>
+            📝 Download Word (.docx)
+          </div>
         </div>
       )}
     </div>

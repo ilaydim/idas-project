@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         // IDAS kurumsal renklerini buraya tanımlayabiliriz
-        havelsanBlue: '#0F172A',
+        idasBlue: '#0F172A',
       }
     },
   },

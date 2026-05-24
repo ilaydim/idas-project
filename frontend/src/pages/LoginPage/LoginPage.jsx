@@ -30,7 +30,11 @@ const LoginPage = () => {
       });
 
       if (error) {
-        alert("Login error: " + error.message);
+        if (error.message.includes("Invalid login credentials")) {
+          alert("Account not found or incorrect password. Please sign up if you don't have an account.");
+        } else {
+          alert("Login error: " + error.message);
+        }
         return;
       }
 

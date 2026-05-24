@@ -20,6 +20,7 @@ const AIAssistant = ({
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [activeFilter, setActiveFilter] = useState("All");
+    const [greetingMessage, setGreetingMessage] = useState("");
     const chatEndRef = useRef(null);
 
     const smartLabels = {
@@ -29,6 +30,17 @@ const AIAssistant = ({
         'R': 'Not Relevant',
         'T': 'Not Time-bound'
     };
+
+    useEffect(() => {
+        const greetings = [
+            "Hi, I'm IDAS AI. Ready to help you!",
+            "Hello! Need assistance with your requirements?",
+            "Welcome! Drop a warning here to ask me about it.",
+            "Hey there! Let's write some perfect requirements together.",
+            "I'm here! What are we working on today?"
+        ];
+        setGreetingMessage(greetings[Math.floor(Math.random() * greetings.length)]);
+    }, []);
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -237,9 +249,25 @@ const AIAssistant = ({
             >
                 <div className="panel-tag">AI Chat</div>
                 <div className="chat-history-area" style={{ fontStyle: 'normal' }}>
-                    {messages.map((m, i) => (
-                        <div key={i} className={`chat-msg-bubble ${m.role}`} style={{ fontStyle: 'normal' }}>{m.text}</div>
-                    ))}
+                    {messages.length === 0 ? (
+                        <div className="empty-chat-greeting" style={{
+                            display: 'flex', flexDirection: 'column', alignItems: 'center',
+                            justifyContent: 'center', height: '100%', color: '#64748b', opacity: 0.8,
+                            padding: '20px', textAlign: 'center', gap: '10px'
+                        }}>
+                            <span style={{ fontSize: '32px' }}>✨</span>
+                            <p style={{ fontSize: '14px', fontWeight: '500', margin: 0 }}>
+                                {greetingMessage}
+                            </p>
+                            <p style={{ fontSize: '12px', margin: 0, color: '#94a3b8' }}>
+                                Ask me anything or drag & drop an analysis card here.
+                            </p>
+                        </div>
+                    ) : (
+                        messages.map((m, i) => (
+                            <div key={i} className={`chat-msg-bubble ${m.role}`} style={{ fontStyle: 'normal' }}>{m.text}</div>
+                        ))
+                    )}
                     <div ref={chatEndRef} />
                 </div>
                 <div className="chat-input-bar">

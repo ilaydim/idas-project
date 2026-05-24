@@ -1,129 +1,241 @@
 {
     "IEEE_830": {
         "title": "IEEE 830 (Classic)",
-        "description": "Traditional and most widely used standard for software requirements.",
+        "description": "Geleneksel ve en yaygın kullanılan yazılım gereksinimleri standardı.",
         "sections": [
             {
                 "id": "1_intro",
                 "title": "1. Introduction",
                 "required": true,
-                "hint": "Purpose, scope and definitions."
+                "placeholder": "Describe the general purpose of the system. E.g., This document outlines the requirements for..."
             },
             {
-                "id": "2_overall",
-                "title": "2. Overall Description",
+                "id": "2_perspective",
+                "title": "2. Product Perspective & Functions",
                 "required": true,
-                "hint": "Product perspective and functions."
+                "placeholder": "Explain the system context. Does it interact with other systems? What is the main architecture?"
             },
             {
-                "id": "3_specific",
-                "title": "3. Specific Requirements",
+                "id": "3_users",
+                "title": "3. User Characteristics",
                 "required": true,
-                "hint": "Functional, non-functional and interface requirements."
+                "placeholder": "Describe the users of the system (e.g., Admins, Customers) and their technical expertise."
             },
             {
-                "id": "4_appendix",
-                "title": "4. Appendices",
+                "id": "4_constraints",
+                "title": "4. Constraints & Assumptions",
+                "required": true,
+                "placeholder": "List technical or business constraints (e.g., must run on Linux, max 2GB RAM, budget limits)."
+            },
+            {
+                "id": "5_functional",
+                "title": "5. Functional Requirements",
+                "required": true,
+                "placeholder": "List all functional requirements using SHALL statements. E.g., The system SHALL allow users to login."
+            },
+            {
+                "id": "6_interfaces",
+                "title": "6. External Interface Requirements",
+                "required": true,
+                "placeholder": "Describe API, UI, or hardware interfaces."
+            },
+            {
+                "id": "7_performance",
+                "title": "7. Performance Requirements",
+                "required": true,
+                "placeholder": "State performance metrics (e.g., response time under 200ms, support 1000 concurrent users)."
+            },
+            {
+                "id": "8_quality",
+                "title": "8. Quality Attributes",
+                "required": true,
+                "placeholder": "Specify quality attributes like Security, Reliability, and Maintainability."
+            },
+            {
+                "id": "9_appendix",
+                "title": "9. Appendices",
                 "required": false,
-                "hint": "Supporting information."
+                "placeholder": "Add any additional information, diagrams, or references here."
+            },
+            {
+                "id": "10_index",
+                "title": "10. Index",
+                "required": false,
+                "placeholder": "Provide an index of terms or document map."
             }
         ]
     },
     "IEEE_29148": {
         "title": "ISO/IEC/IEEE 29148 (Modern)",
-        "description": "Current, comprehensive industry standard for system and software engineering.",
+        "description": "Sistem ve yazılım mühendisliği için güncel, kapsamlı endüstri standardı.",
         "sections": [
             {
-                "id": "1_intro",
-                "title": "1. Introduction",
+                "id": "1_scope",
+                "title": "1. Scope",
                 "required": true,
-                "hint": "System purpose and overview."
+                "placeholder": "Define the scope of the system. What is included and what is excluded?"
             },
             {
                 "id": "2_references",
                 "title": "2. Normative References",
                 "required": false,
-                "hint": "Referenced standards or documents."
+                "placeholder": "List any external documents or standards referenced."
             },
             {
                 "id": "3_terms",
-                "title": "3. Terms and Definitions",
+                "title": "3. Terms, Definitions and Abbreviated Terms",
                 "required": true,
-                "hint": "Project specific terminology."
+                "placeholder": "List acronyms, abbreviations, and specific terms used in this document."
             },
             {
-                "id": "4_system_req",
-                "title": "4. System Requirements",
+                "id": "4_concepts",
+                "title": "4. Concepts of Requirements Engineering",
                 "required": true,
-                "hint": "Capabilities, functions and constraints."
+                "placeholder": "Describe the high-level concepts of the requirements engineering approach."
             },
             {
-                "id": "5_verification",
-                "title": "5. Verification & Validation",
+                "id": "5_process",
+                "title": "5. Requirements Engineering Process",
                 "required": true,
-                "hint": "Testing and acceptance criteria."
+                "placeholder": "Explain the process used to gather and manage requirements."
+            },
+            {
+                "id": "6_syrs",
+                "title": "6. System Requirements Specification (SyRS)",
+                "required": true,
+                "placeholder": "Detail the System-level requirements."
+            },
+            {
+                "id": "7_srs",
+                "title": "7. Software Requirements Specification (SRS)",
+                "required": true,
+                "placeholder": "Detail the Software-level requirements."
             }
         ]
     },
-    "IEEE_AGILE": {
-        "title": "Agile-Focused IEEE",
-        "description": "Adapts IEEE standards for Agile processes with a user-centric structure.",
+    "IEEE_730": {
+        "title": "IEEE 730 (Software Quality Assurance)",
+        "description": "Yazılım kalite güvencesi planlaması ve süreç denetimi için IEEE standardı.",
         "sections": [
             {
-                "id": "1_vision",
-                "title": "1. Product Vision",
+                "id": "1_purpose",
+                "title": "1. Purpose",
                 "required": true,
-                "hint": "The 'Why' behind the project."
+                "placeholder": "State the purpose of this Software Quality Assurance Plan (SQAP). Define what product or project it covers and what quality objectives it aims to achieve."
             },
             {
-                "id": "2_user_stories",
-                "title": "2. User Stories",
+                "id": "2_reference",
+                "title": "2. Reference Documents",
                 "required": true,
-                "hint": "As a [role], I want [feature] so that [benefit]."
+                "placeholder": "List all documents referenced in this plan (e.g., SRS, project plan, relevant IEEE standards such as IEEE 829, IEEE 1028)."
             },
             {
-                "id": "3_backlog",
-                "title": "3. Functional Backlog",
+                "id": "3_mgmt",
+                "title": "3. Software Quality Assurance Management",
                 "required": true,
-                "hint": "Prioritized feature list."
+                "placeholder": "Describe the SQA organization, roles, and responsibilities. Who is accountable for quality activities? How is SQA integrated into the project lifecycle?"
             },
             {
-                "id": "4_nonfunc_backlog",
-                "title": "4. Quality Attributes",
+                "id": "4_documentation",
+                "title": "4. Documentation",
                 "required": true,
-                "hint": "NFRs in agile context (Definition of Done)."
+                "placeholder": "List all project documents that are subject to SQA review (e.g., SRS, design documents, test plans). Specify the review criteria for each."
+            },
+            {
+                "id": "5_standards",
+                "title": "5. Standards, Practices & Conventions",
+                "required": true,
+                "placeholder": "Enumerate the coding standards, naming conventions, design practices, and process guidelines that the project must follow. Reference any applicable IEEE or ISO standards."
+            },
+            {
+                "id": "6_reviews",
+                "title": "6. Software Reviews & Audits",
+                "required": true,
+                "placeholder": "Identify all planned reviews (e.g., requirements review, design review, code review) and audits. Specify timing, participants, entry/exit criteria, and expected outputs."
+            },
+            {
+                "id": "7_testing",
+                "title": "7. Testing",
+                "required": true,
+                "placeholder": "Describe the testing approach: unit, integration, system, acceptance. Reference the test plan and define criteria for test completion and success."
+            },
+            {
+                "id": "8_problems",
+                "title": "8. Problem Reporting & Corrective Action",
+                "required": true,
+                "placeholder": "Define the process for identifying, documenting, tracking, and resolving defects or non-conformances. Specify the tool or form used for problem reports."
+            },
+            {
+                "id": "9_tools",
+                "title": "9. Tools, Techniques & Methodologies",
+                "required": false,
+                "placeholder": "List the tools used to support SQA activities (e.g., static analysis tools, test automation frameworks, version control systems)."
+            },
+            {
+                "id": "10_risks",
+                "title": "10. Risk Management",
+                "required": true,
+                "placeholder": "Identify quality-related risks and their mitigation strategies. Include likelihood, impact, and contingency plans for each identified risk."
             }
         ]
     },
-    "HAVELSAN": {
-        "title": "HAVELSAN Standard SRS",
-        "description": "Customized document structure for corporate projects.",
+    "IEEE_12207": {
+        "title": "IEEE/ISO/IEC 12207",
+        "description": "Yazılım yaşam döngüsü süreçleri standardı.",
         "sections": [
             {
-                "id": "1_intro",
-                "title": "1. Introduction",
+                "id": "1_scope",
+                "title": "1. Scope",
                 "required": true,
-                "hint": "Project summary and purpose."
+                "placeholder": "Define the scope of the system. What is included and what is excluded?"
             },
             {
-                "id": "2_overall",
-                "title": "2. Overall Description",
-                "required": true
+                "id": "2_references",
+                "title": "2. Normative References",
+                "required": false,
+                "placeholder": "List any external documents or standards referenced."
             },
             {
-                "id": "3_functional",
-                "title": "3. Functional Requirements",
-                "required": true
+                "id": "3_terms",
+                "title": "3. Terms, Definitions and Concepts",
+                "required": true,
+                "placeholder": "List acronyms, abbreviations, and specific terms used in this document."
             },
             {
-                "id": "4_nonfunctional",
-                "title": "4. Non-Functional Requirements",
-                "required": true
+                "id": "4_org",
+                "title": "4. Organization of this Document",
+                "required": true,
+                "placeholder": "Describe the organization of this document."
             },
             {
-                "id": "5_glossary",
-                "title": "5. Glossary",
-                "required": false
+                "id": "5_agreement",
+                "title": "5. Agreement Processes",
+                "required": true,
+                "placeholder": "Detail agreement processes (Acquisition, Supply)."
+            },
+            {
+                "id": "6_enabling",
+                "title": "6. Organizational Project-Enabling Processes",
+                "required": true,
+                "placeholder": "Detail organizational project-enabling processes."
+            },
+            {
+                "id": "7_tech_mgmt",
+                "title": "7. Technical Management Processes",
+                "required": true,
+                "placeholder": "Detail technical management processes."
+            },
+            {
+                "id": "8_tech",
+                "title": "8. Technical Processes",
+                "required": true,
+                "placeholder": "Detail technical processes."
+            },
+            {
+                "id": "9_software",
+                "title": "9. Software-Specific Processes",
+                "required": true,
+                "placeholder": "Detail software-specific processes."
             }
         ]
     }

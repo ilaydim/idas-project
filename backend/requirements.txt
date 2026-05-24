@@ -10,3 +10,5 @@ python-docx
 PyPDF2
 PyJWT
 requests
+pytest
+httpx

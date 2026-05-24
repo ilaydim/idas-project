@@ -1,6 +1,7 @@
 from backend.agents.base_agent import BaseAgent
 import json
 import re
+import os
 
 class ReviewAgent(BaseAgent):
     def __init__(self, model_name=None):
@@ -45,11 +46,29 @@ class ReviewAgent(BaseAgent):
         return None
 
     def process(self, input_text):
+        # Load examples for few-shot prompting
+        rules_path = os.path.join(os.path.dirname(__file__), "..", "data", "rules.json")
+        examples_str = ""
+        try:
+            with open(rules_path, "r") as f:
+                rules_data = json.load(f)
+                examples = rules_data.get("classification_examples", {})
+                fr_ex = "\n".join([f"- FR: {ex}" for ex in examples.get("functional", [])])
+                nfr_ex = "\n".join([f"- NFR: {ex}" for ex in examples.get("non_functional", [])])
+                examples_str = f"\nEXAMPLES FOR CLASSIFICATION:\n{fr_ex}\n{nfr_ex}\n"
+        except Exception as e:
+            print(f"Warning: Could not load rules for few-shot prompting: {e}")
+
         prompt = f"""
         Analyze the following software requirement document content. 
         Your task is to:
         1. Extract individual requirements from the text.
         2. For each requirement, determine its type: 'FR' (Functional) or 'NFR' (Non-Functional).
+           - Use 'FR' for what the system MUST DO (behaviors, data processing, user actions).
+           - Use 'NFR' for how WELL the system must do it (performance, security, usability, constraints).
+        
+        {examples_str}
+
         3. Analyze the quality of each requirement based on IEEE/ISO standards.
         4. Provide a status: 'success' (no issues), 'warning' (minor issues), or 'error' (critical issues).
         5. Identify the specific issue if any.

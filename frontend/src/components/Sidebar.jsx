@@ -24,7 +24,7 @@ const Sidebar = () => {
         ))}
       </nav>
       <div className="p-6 border-t border-slate-700 text-sm text-slate-400">
-        v2.0 - HAVELSAN & IEEE
+        v2.0 - IEEE Standards
       </div>
     </aside>
   );

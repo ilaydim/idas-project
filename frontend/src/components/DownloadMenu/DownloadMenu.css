@@ -58,3 +58,24 @@
 .menu-item:not(:last-child) {
     border-bottom: 1px solid var(--border-color, #f1f5f9);
 }
+
+/* Loading spinner */
+.download-icon-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-top-color: var(--indigo-600, #4f46e5);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}

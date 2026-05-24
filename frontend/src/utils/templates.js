@@ -1,44 +1,62 @@
 export const SRS_TEMPLATES = {
   IEEE_830: {
     title: "IEEE 830 (Classic)",
-    description: "Yazılım gereksinimleri için geleneksel ve en yaygın kullanılan standart.",
+    description: "Geleneksel ve en yaygın kullanılan yazılım gereksinimleri standardı.",
     sections: [
-      { id: "1_intro", title: "1. Introduction", required: true, hint: "Purpose, scope and definitions." },
-      { id: "2_overall", title: "2. Overall Description", required: true, hint: "Product perspective and functions." },
-      { id: "3_specific", title: "3. Specific Requirements", required: true, hint: "Functional, non-functional and interface requirements." },
-      { id: "4_appendix", title: "4. Appendices", required: false, hint: "Supporting information." }
+      { id: "1_intro", title: "1. Introduction", required: true },
+      { id: "2_perspective", title: "2. Product Perspective & Functions", required: true },
+      { id: "3_users", title: "3. User Characteristics", required: true },
+      { id: "4_constraints", title: "4. Constraints & Assumptions", required: true },
+      { id: "5_functional", title: "5. Functional Requirements", required: true },
+      { id: "6_interfaces", title: "6. External Interface Requirements", required: true },
+      { id: "7_performance", title: "7. Performance Requirements", required: true },
+      { id: "8_quality", title: "8. Quality Attributes", required: true },
+      { id: "9_appendix", title: "9. Appendices", required: false },
+      { id: "10_index", title: "10. Index", required: false }
     ]
   },
   IEEE_29148: {
     title: "ISO/IEC/IEEE 29148 (Modern)",
     description: "Sistem ve yazılım mühendisliği için güncel, kapsamlı endüstri standardı.",
     sections: [
-      { id: "1_intro", title: "1. Introduction", required: true, hint: "System purpose and overview." },
-      { id: "2_references", title: "2. Normative References", required: false, hint: "Referenced standards or documents." },
-      { id: "3_terms", title: "3. Terms and Definitions", required: true, hint: "Project specific terminology." },
-      { id: "4_system_req", title: "4. System Requirements", required: true, hint: "Capabilities, functions and constraints." },
-      { id: "5_verification", title: "5. Verification & Validation", required: true, hint: "Testing and acceptance criteria." }
+      { id: "1_scope", title: "1. Scope", required: true },
+      { id: "2_references", title: "2. Normative References", required: false },
+      { id: "3_terms", title: "3. Terms, Definitions and Abbreviated Terms", required: true },
+      { id: "4_concepts", title: "4. Concepts of Requirements Engineering", required: true },
+      { id: "5_process", title: "5. Requirements Engineering Process", required: true },
+      { id: "6_syrs", title: "6. System Requirements Specification (SyRS)", required: true },
+      { id: "7_srs", title: "7. Software Requirements Specification (SRS)", required: true }
     ]
   },
-  IEEE_AGILE: {
-    title: "Agile-Focused IEEE",
-    description: "IEEE standartlarını çevik (Agile) süreçlere uyarlayan, kullanıcı odaklı yapı.",
+  IEEE_730: {
+    title: "IEEE 730 (Software Quality Assurance)",
+    description: "Yazılım kalite güvencesi planlaması ve süreç denetimi için IEEE standardı.",
     sections: [
-      { id: "1_vision", title: "1. Product Vision", required: true, hint: "The 'Why' behind the project." },
-      { id: "2_user_stories", title: "2. User Stories", required: true, hint: "As a [role], I want [feature] so that [benefit]." },
-      { id: "3_backlog", title: "3. Functional Backlog", required: true, hint: "Prioritized feature list." },
-      { id: "4_nonfunc_backlog", title: "4. Quality Attributes", required: true, hint: "NFRs in agile context (Definition of Done)." }
+      { id: "1_purpose", title: "1. Purpose", required: true },
+      { id: "2_reference", title: "2. Reference Documents", required: true },
+      { id: "3_mgmt", title: "3. Software Quality Assurance Management", required: true },
+      { id: "4_documentation", title: "4. Documentation", required: true },
+      { id: "5_standards", title: "5. Standards, Practices & Conventions", required: true },
+      { id: "6_reviews", title: "6. Software Reviews & Audits", required: true },
+      { id: "7_testing", title: "7. Testing", required: true },
+      { id: "8_problems", title: "8. Problem Reporting & Corrective Action", required: true },
+      { id: "9_tools", title: "9. Tools, Techniques & Methodologies", required: false },
+      { id: "10_risks", title: "10. Risk Management", required: true }
     ]
   },
-  HAVELSAN: {
-    title: "HAVELSAN Standart SRS",
-    description: "Kurumsal projeler için özelleştirilmiş döküman yapısı.",
+  IEEE_12207: {
+    title: "IEEE/ISO/IEC 12207",
+    description: "Yazılım yaşam döngüsü süreçleri standardı.",
     sections: [
-      { id: "1_giris", title: "1. Giriş", required: true, hint: "Proje özeti ve amacı." },
-      { id: "2_genel_tanim", title: "2. Genel Tanımlama", required: true },
-      { id: "3_fonksiyonel", title: "3. Fonksiyonel Gereksinimler", required: true },
-      { id: "4_fonksiyonel_olmayan", title: "4. Fonksiyonel Olmayan Gereksinimler", required: true },
-      { id: "5_sozluk", title: "5. Sözlük", required: false }
+      { id: "1_scope", title: "1. Scope", required: true },
+      { id: "2_references", title: "2. Normative References", required: false },
+      { id: "3_terms", title: "3. Terms, Definitions and Concepts", required: true },
+      { id: "4_org", title: "4. Organization of this Document", required: true },
+      { id: "5_agreement", title: "5. Agreement Processes", required: true },
+      { id: "6_enabling", title: "6. Organizational Project-Enabling Processes", required: true },
+      { id: "7_tech_mgmt", title: "7. Technical Management Processes", required: true },
+      { id: "8_tech", title: "8. Technical Processes", required: true },
+      { id: "9_software", title: "9. Software-Specific Processes", required: true }
     ]
   }
 };

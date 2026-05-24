@@ -84,5 +84,21 @@
         "always",
         "never",
         "continuously"
-    ]
+    ],
+    "classification_examples": {
+        "functional": [
+            "The system shall allow users to upload a PDF document for analysis.",
+            "The system must generate an email notification when a new issue is detected.",
+            "The user shall be able to filter search results by date and category.",
+            "The database shall store all user-provided requirement text for up to 5 years.",
+            "The system shall provide a dashboard showing the status of all active projects."
+        ],
+        "non_functional": [
+            "The system shall process a 50-page document in less than 2 minutes.",
+            "All user passwords must be encrypted using AES-256 before storage.",
+            "The system shall be available 99.9% of the time during business hours.",
+            "The interface shall adhere to WCAG 2.1 Level AA accessibility standards.",
+            "The application shall support at least 500 concurrent users without degradation."
+        ]
+    }
 }

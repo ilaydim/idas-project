@@ -191,6 +191,8 @@ const AuthoringPage = () => {
     setSelectedTemplate(tempKey);
     setIsTemplateLocked(true);
     setActiveSection("toc"); // İlk açılışta İçindekiler'i göster
+    setMessages([]); // Yeni şablon seçilince chat geçmişini temizle
+    setAnalysisResults([]); // Analiz sonuçlarını da temizle
   };
 
   const handleGoBackToSelection = () => {
@@ -205,6 +207,8 @@ const AuthoringPage = () => {
     setContent({});
     setProgress(0);
     setActiveSection("");
+    setMessages([]); // Şablon değişince chat geçmişini temizle
+    setAnalysisResults([]); // Analiz sonuçlarını da temizle
   };
 
   const handleGoToDashboard = () => {
@@ -549,7 +553,7 @@ const AuthoringPage = () => {
                   className="main-editor-textarea"
                   value={content[activeSection] || ""}
                   onChange={e => setContent({ ...content, [activeSection]: e.target.value })}
-                  placeholder={uiConfig?.editor.placeholder || "..."}
+                  placeholder={templates[selectedTemplate]?.sections.find(s => s.id === activeSection)?.placeholder || uiConfig?.editor.placeholder || "..."}
                 />
               )}
             </div>

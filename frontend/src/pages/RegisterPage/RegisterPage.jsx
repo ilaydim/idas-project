@@ -11,6 +11,13 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Sadece geçerli mail formatlarını kabul et (ör: saklavciyaren@gmail.com)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Lütfen geçerli bir e-posta adresi girin (örneğin: isim@gmail.com).");
+      return;
+    }
+
     try {
       // 1. Supabase ile kayıt işlemini başlat
       const { data, error } = await supabase.auth.signUp({
@@ -26,8 +33,9 @@ const RegisterPage = () => {
       if (error) throw error;
 
       if (data) {
-        alert("Registration successful! Please check your email for confirmation.");
-        navigate("/login");
+        // E-posta onayı kapalı olduğu için Supabase arka planda otomatik giriş yaptı.
+        // Kullanıcıyı direkt sisteme (dashboard'a) alıyoruz.
+        navigate("/dashboard");
       }
     } catch (error) {
       alert("Registration failed: " + error.message);

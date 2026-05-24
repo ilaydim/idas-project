@@ -21,11 +21,15 @@ const ForgotPasswordPage = () => {
             });
 
             if (error) {
-                setStatus({ type: "error", message: error.message });
+                if (error.message.includes("User not found")) {
+                    setStatus({ type: "error", message: "Kayıtlı değilsiniz, lütfen kayıt olun." });
+                } else {
+                    setStatus({ type: "error", message: error.message });
+                }
             } else {
                 setStatus({
                     type: "success",
-                    message: "Password reset link sent! Please check your email inbox.",
+                    message: "If an account exists with this email, a reset link has been sent. Please check your inbox.",
                 });
             }
         } catch (err) {
