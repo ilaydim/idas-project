@@ -32,7 +32,6 @@ idas-project/
 ├── backend/       # API and AI/RAG pipeline (Python)
 ├── frontend/       # Web interface (JavaScript)
 ├── idas_data/       # Data handling
-├── Raporlar/         # Project reports/documentation
 └── start.sh           # Local startup script
 ```
 
