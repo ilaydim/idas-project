@@ -17,13 +17,13 @@ IDAS is an intelligent documentation assistant that improves the quality of Soft
 ## 📸 Screenshots
 
 **Landing page**
-![IDAS landing page](docs/landingpage.png)
+![IDAS landing page](screenshots/landingpage.png)
 
 **Authoring Mode** — structuring an SRS document against a standard template (IEEE 830)
-![Authoring mode](docs/authoringmode.png)
+![Authoring mode](screenshots/authoringmode.png)
 
 **Review Mode** — real-time AI analysis flagging an unmeasurable requirement and suggesting a fix
-![Review mode](docs/reviewmode.png)
+![Review mode](screenshots/reviewmode.png)
 
 ## 🏗️ Architecture
 
